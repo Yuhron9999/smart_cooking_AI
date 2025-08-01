@@ -1,13 +1,46 @@
-# 🔒 Security Policy - Smart Cooking AI
+# 🔒 Smart Cooking AI - Security Guidelines
 
-## 🛡️ Supported Versions
+## 🛡️ Security Overview
 
-Chúng tôi hỗ trợ bảo mật cho các phiên bản sau:
+Smart Cooking AI implements comprehensive security measures across all components to protect user data and system integrity.
 
-| Phiên bản | Được hỗ trợ |
-| --------- | ----------- |
-| 1.0.x     | ✅ Có       |
-| < 1.0     | ❌ Không    |
+## � Authentication & Authorization
+
+### 🎫 Google OAuth2 Integration
+```typescript
+// Frontend authentication flow
+const { data: session } = useSession();
+
+// Protected route wrapper
+export const ProtectedRoute = ({ children, requiredRole = "USER" }) => {
+  if (!session) return <LoginPage />;
+  if (!hasRole(session.user, requiredRole)) return <UnauthorizedPage />;
+  return children;
+};
+```
+
+### 👥 Role-Based Access Control (RBAC)
+- **USER**: Basic recipe access, AI chat, personal data
+- **CHEF**: Content creation, student management, analytics
+- **ADMIN**: Full system access, user management, security settings
+
+### 🔐 JWT Token Management
+```java
+// Backend JWT configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
+    }
+}
+```
 
 ## 🚨 Báo cáo Lỗ hổng Bảo mật
 
