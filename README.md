@@ -1,43 +1,200 @@
-<<<<<<< HEAD
-# Smart Cooking AI
+# 🌟 Smart Cooking AI - Hệ thống Nấu ăn Thông minh
 
-## Mô tả dự án
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub issues](https://img.shields.io/github/issues/Yuhron9999/smart_cooking_AI)](https://github.com/Yuhron9999/smart_cooking_AI/issues)
+[![GitHub forks](https://img.shields.io/github/forks/Yuhron9999/smart_cooking_AI)](https://github.com/Yuhron9999/smart_cooking_AI/network)
+[![GitHub stars](https://img.shields.io/github/stars/Yuhron9999/smart_cooking_AI)](https://github.com/Yuhron9999/smart_cooking_AI/stargazers)
 
-Hệ thống AI thông minh hỗ trợ nấu ăn với khả năng nhận diện thực phẩm, gợi ý công thức, và hướng dẫn nấu ăn từng bước.
+## 📋 Tổng quan
 
-## Kiến trúc hệ thống
+**Smart Cooking AI** là một nền tảng nấu ăn thông minh tích hợp AI toàn diện, bao gồm:
 
-### Frontend (React.js)
+- 🤖 **AI Recipe Generation** - Tạo công thức từ nguyên liệu có sẵn
+- 🗣️ **Voice Assistant** - Trợ lý giọng nói thông minh 
+- 📸 **Food Recognition** - Nhận dạng món ăn qua hình ảnh
+- 🌍 **Multi-language Support** - Hỗ trợ đa ngôn ngữ (VI/EN/JA/KO/ZH)
+- 📍 **Location-based Features** - Gợi ý món ăn theo vùng miền
+- 📱 **Cross-platform** - Web, Mobile và Desktop
 
-- Giao diện người dùng hiện đại
-- Chụp ảnh và nhận diện thực phẩm
-- Hiển thị công thức và hướng dẫn nấu ăn
-- Chat bot AI tương tác
+## 🏗️ Kiến trúc Hệ thống
 
-### Backend (Node.js/Express)
+```
+Smart Cooking AI/
+├── 🔧 backend/              # Spring Boot API (Port 8080)
+├── 🤖 ai-service/           # FastAPI AI Service (Port 8001)  
+├── 🌐 frontend-nextjs/      # Next.js Web App (Port 3000)
+├── 📱 mobile-app/           # Flutter Mobile App
+├── 📚 docs/                 # Documentation
+├── 🛠️ scripts/             # Build & deployment scripts
+└── 🐳 docker-compose.yml   # Container orchestration
+```
 
-- API RESTful
-- Xử lý authentication và authorization
-- Tích hợp với AI/ML models
-- Quản lý database
+## ✨ Tính năng chính
 
-### AI/ML Components
+### 🎯 Core Features
+- **Tạo công thức AI**: Gemini/OpenAI tích hợp
+- **Voice Assistant**: STT/TTS processing
+- **Image Recognition**: Phân tích món ăn qua ảnh
+- **Multi-platform**: Web + Mobile + Desktop
+- **Real-time Chat**: AI-powered cooking assistant
 
-- TensorFlow.js cho nhận diện ảnh
-- OpenAI GPT API cho gợi ý công thức
-- Computer Vision cho phân tích thực phẩm
+### 🌍 Localization & Regional
+- **i18n Support**: Hoàn toàn đa ngôn ngữ
+- **Regional Cuisine**: Gợi ý theo vùng miền Việt Nam
+- **Location Services**: Tìm cửa hàng nguyên liệu gần nhất
+- **Cultural Adaptation**: Phù hợp với từng địa phương
 
-### Database
+### 🔐 Security & Performance
+- **Google OAuth2**: Xác thực an toàn
+- **Role-based Access**: USER/CHEF/ADMIN
+- **Redis Caching**: Tối ưu hiệu suất
+- **Docker Support**: Easy deployment
 
-- MongoDB cho dữ liệu chính
-- Redis cho caching
+## 🚀 Quick Start
 
-## Cài đặt và chạy dự án
+### Prerequisites
+- **Node.js** 18+ & npm
+- **Java** 17+ & Maven  
+- **Python** 3.9+ & pip
+- **Flutter** 3.0+ & Dart
+- **Docker** & Docker Compose
+- **MySQL** 8.0+
+- **Redis** 6.0+
 
-### Yêu cầu hệ thống
+### 1. Clone & Setup
+```bash
+git clone https://github.com/Yuhron9999/smart_cooking_AI.git
+cd smart_cooking_AI
+```
 
-- Node.js 18+
-- MongoDB
+### 2. Environment Configuration
+```bash
+# Copy environment templates
+cp backend/.env.example backend/.env
+cp ai-service/.env.example ai-service/.env
+cp frontend-nextjs/.env.example frontend-nextjs/.env.local
+cp mobile-app/.env.example mobile-app/.env
+
+# Configure your API keys
+# OPENAI_API_KEY=your_openai_key
+# GEMINI_API_KEY=your_gemini_key  
+# GOOGLE_API_KEY=your_google_key
+```
+
+### 3. Docker Quick Start (Recommended)
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+```
+
+### 4. Manual Setup
+```bash
+# Backend (Spring Boot)
+cd backend
+./mvnw spring-boot:run
+
+# AI Service (FastAPI)  
+cd ai-service
+pip install -r requirements.txt
+uvicorn app:app --reload --port 8001
+
+# Frontend (Next.js)
+cd frontend-nextjs
+npm install && npm run dev
+
+# Mobile (Flutter)
+cd mobile-app
+flutter pub get && flutter run
+```
+
+## 📚 Documentation
+
+| Documentation | Description |
+|---------------|-------------|
+| [📖 Setup Guide](docs/COMPLETE_SETUP_GUIDE.md) | Hướng dẫn cài đặt chi tiết |
+| [🔧 API Documentation](docs/API_INTEGRATION_GUIDE.md) | API endpoints & usage |
+| [🤖 AI Integration](docs/AI_INTEGRATION_GUIDE.md) | AI services setup |
+| [📱 Mobile Guide](docs/MOBILE_APP_DOCUMENTATION.md) | Flutter app development |
+| [🌍 i18n Guide](docs/setup/) | Internationalization setup |
+| [🐳 Docker Guide](docs/DOCKER_DEPLOYMENT.md) | Container deployment |
+
+## 🛠️ Development
+
+### Tech Stack
+- **Backend**: Spring Boot, MySQL, Redis, JWT
+- **AI Service**: FastAPI, OpenAI, Gemini, STT/TTS
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **Mobile**: Flutter, Dart, Provider state management
+- **DevOps**: Docker, GitHub Actions, Nginx
+
+### Project Structure
+```
+├── backend/                 # Spring Boot REST API
+│   ├── src/main/java/      # Java source code
+│   ├── src/main/resources/ # Configuration files
+│   └── target/             # Compiled classes
+├── ai-service/             # FastAPI AI service
+│   ├── app.py             # Main FastAPI application
+│   ├── services/          # AI service modules
+│   └── requirements.txt   # Python dependencies
+├── frontend-nextjs/        # Next.js web application
+│   ├── src/pages/         # Next.js pages
+│   ├── src/components/    # React components
+│   └── public/locales/    # i18n translation files
+└── mobile-app/            # Flutter mobile app
+    ├── lib/               # Dart source code
+    ├── assets/            # App assets & translations
+    └── android/ios/       # Platform-specific code
+```
+
+## 🤝 Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Development Workflow
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- **Live Demo**: [https://smartcooking.ai](https://smartcooking.ai) _(Coming Soon)_
+- **Documentation**: [Wiki](https://github.com/Yuhron9999/smart_cooking_AI/wiki)
+- **Issues**: [GitHub Issues](https://github.com/Yuhron9999/smart_cooking_AI/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Yuhron9999/smart_cooking_AI/discussions)
+
+## 👥 Team
+
+- **Lead Developer**: [@Yuhron9999](https://github.com/Yuhron9999)
+- **Contributors**: See [CONTRIBUTORS.md](CONTRIBUTORS.md)
+
+## 📊 Project Status
+
+- ✅ **Backend API**: Core functionality completed
+- ✅ **AI Integration**: OpenAI & Gemini integrated  
+- ✅ **Web Frontend**: Responsive UI with i18n
+- 🔄 **Mobile App**: In development
+- 🔄 **Voice Features**: Beta testing
+- 📋 **Documentation**: Ongoing improvements
+
+---
+
+<p align="center">
+  <strong>Made with ❤️ by the Smart Cooking AI Team</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Yuhron9999/smart_cooking_AI">⭐ Star this project if you find it helpful!</a>
+</p>
 - Redis
 - Python 3.8+ (cho ML models)
 
