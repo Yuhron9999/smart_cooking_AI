@@ -1,0 +1,223 @@
+{
+    "app": {
+        "name": "Smart Cooking AI",
+        "tagline": "インテリジェント料理システム"
+    },
+    "splash": {
+        "tagline": "AIでスマート料理",
+        "loading": "初期化中...",
+        "version": "バージョン {}"
+    },
+    "navigation": {
+        "home": "ホーム",
+        "recipes": "レシピ",
+        "ai_assistant": "AIアシスタント",
+        "voice": "音声",
+        "profile": "プロフィール"
+    },
+    "auth": {
+        "login": "ログイン",
+        "logout": "ログアウト",
+        "register": "登録",
+        "google_login": "Googleでログイン",
+        "email": "メール",
+        "password": "パスワード",
+        "confirm_password": "パスワード確認",
+        "forgot_password": "パスワードを忘れましたか？",
+        "name": "フルネーム",
+        "phone": "電話番号",
+        "login_success": "ログイン成功",
+        "logout_success": "ログアウト成功",
+        "register_success": "登録成功"
+    },
+    "recipe": {
+        "title": "料理レシピ",
+        "create": "新しいレシピを作成",
+        "edit": "レシピを編集",
+        "ingredients": "材料",
+        "instructions": "手順",
+        "cooking_time": "調理時間",
+        "prep_time": "準備時間",
+        "difficulty": "難易度",
+        "servings": "人分",
+        "calories": "カロリー",
+        "category": "カテゴリ",
+        "cuisine": "料理",
+        "tags": "タグ",
+        "description": "説明",
+        "save": "レシピを保存",
+        "delete": "レシピを削除",
+        "share": "共有",
+        "favorite": "お気に入り",
+        "unfavorite": "お気に入り解除",
+        "no_recipes": "レシピがありません",
+        "search_placeholder": "レシピを検索..."
+    },
+    "difficulty": {
+        "easy": "簡単",
+        "medium": "普通",
+        "hard": "難しい"
+    },
+    "categories": {
+        "breakfast": "朝食",
+        "lunch": "昼食",
+        "dinner": "夕食",
+        "dessert": "デザート",
+        "snack": "スナック",
+        "beverage": "飲み物",
+        "appetizer": "前菜",
+        "main_course": "メインコース",
+        "side_dish": "副菜",
+        "soup": "スープ",
+        "salad": "サラダ",
+        "vegetarian": "ベジタリアン",
+        "vegan": "ビーガン",
+        "gluten_free": "グルテンフリー"
+    },
+    "cuisines": {
+        "mien_bac": "北ベトナム",
+        "mien_trung": "中央ベトナム",
+        "mien_nam": "南ベトナム",
+        "asian": "アジア",
+        "european": "ヨーロッパ",
+        "american": "アメリカ",
+        "international": "国際"
+    },
+    "ai": {
+        "recipe_generation": "AIレシピ生成",
+        "image_recognition": "食品認識",
+        "chatbot": "AIとチャット",
+        "voice_assistant": "音声アシスタント",
+        "nutrition_analysis": "栄養分析",
+        "cooking_tips": "料理のコツ",
+        "ingredient_substitute": "材料代替",
+        "meal_planning": "食事計画"
+    },
+    "voice": {
+        "start_recording": "録音開始",
+        "stop_recording": "録音停止",
+        "listening": "聞いています...",
+        "processing": "処理中...",
+        "speak_command": "コマンドを話してください",
+        "voice_not_supported": "音声がサポートされていません",
+        "microphone_permission": "マイクの許可が必要です"
+    },
+    "location": {
+        "current_location": "現在地",
+        "find_stores": "店舗を探す",
+        "nearby_stores": "近くの店舗",
+        "get_directions": "道順を取得",
+        "distance": "距離",
+        "rating": "評価",
+        "regional_specialties": "地域特産品",
+        "location_permission": "位置情報の許可が必要です"
+    },
+    "nutrition": {
+        "calories": "カロリー",
+        "protein": "タンパク質",
+        "carbs": "炭水化物",
+        "fat": "脂肪",
+        "fiber": "食物繊維",
+        "sugar": "砂糖",
+        "sodium": "ナトリウム",
+        "cholesterol": "コレステロール",
+        "vitamins": "ビタミン",
+        "minerals": "ミネラル",
+        "per_serving": "1人分",
+        "daily_value": "1日の値"
+    },
+    "profile": {
+        "edit_profile": "プロフィール編集",
+        "settings": "設定",
+        "language": "言語",
+        "theme": "テーマ",
+        "notifications": "通知",
+        "privacy": "プライバシー",
+        "help": "ヘルプ",
+        "about": "について",
+        "contact": "連絡先",
+        "rate_app": "アプリを評価",
+        "share_app": "アプリを共有"
+    },
+    "settings": {
+        "general": "一般",
+        "account": "アカウント",
+        "preferences": "設定",
+        "security": "セキュリティ",
+        "data": "データ",
+        "support": "サポート"
+    },
+    "onboarding": {
+        "welcome": "ようこそ",
+        "title1": "AIでスマート料理",
+        "subtitle1": "利用可能な材料からカスタムレシピを作成",
+        "title2": "音声アシスタント",
+        "subtitle2": "料理中の音声制御",
+        "title3": "食品認識",
+        "subtitle3": "写真を撮って認識と栄養分析",
+        "next": "次へ",
+        "skip": "スキップ",
+        "get_started": "始める"
+    },
+    "errors": {
+        "network_error": "ネットワーク接続なし",
+        "server_error": "サーバーエラー",
+        "unknown_error": "不明なエラー",
+        "timeout_error": "接続タイムアウト",
+        "validation_error": "無効なデータ",
+        "permission_denied": "許可が拒否されました",
+        "camera_error": "カメラエラー",
+        "microphone_error": "マイクエラー"
+    },
+    "messages": {
+        "success": "成功",
+        "loading": "読み込み中...",
+        "saving": "保存中...",
+        "deleting": "削除中...",
+        "uploading": "アップロード中...",
+        "processing": "処理中...",
+        "no_data": "データなし",
+        "try_again": "再試行",
+        "cancel": "キャンセル",
+        "confirm": "確認",
+        "done": "完了"
+    },
+    "buttons": {
+        "save": "保存",
+        "cancel": "キャンセル",
+        "delete": "削除",
+        "edit": "編集",
+        "add": "追加",
+        "remove": "削除",
+        "submit": "送信",
+        "reset": "リセット",
+        "retry": "再試行",
+        "close": "閉じる",
+        "open": "開く",
+        "select": "選択",
+        "upload": "アップロード",
+        "download": "ダウンロード"
+    },
+    "units": {
+        "gram": "グラム",
+        "kilogram": "kg",
+        "liter": "リットル",
+        "milliliter": "ml",
+        "cup": "カップ",
+        "tablespoon": "大さじ",
+        "teaspoon": "小さじ",
+        "piece": "個",
+        "slice": "切れ",
+        "clove": "片"
+    },
+    "time": {
+        "minutes": "分",
+        "hours": "時間",
+        "days": "日",
+        "weeks": "週",
+        "months": "月",
+        "years": "年",
+        "just_now": "たった今",
+        "ago": "前"
+    }
+}

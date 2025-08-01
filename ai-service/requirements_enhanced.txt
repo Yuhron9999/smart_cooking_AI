@@ -1,0 +1,53 @@
+# Smart Cooking AI Service - Enhanced Dependencies
+# Main FastAPI framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# HTTP client for external API calls
+httpx==0.25.2
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Data validation and serialization
+pydantic==2.5.0
+
+# Google AI and APIs
+google-generativeai==0.3.2
+google-cloud-translate==3.12.1
+google-auth==2.40.3
+google-auth-oauthlib==1.0.0
+google-auth-httplib2==0.2.0
+google-api-python-client==2.177.0
+
+# OpenAI API
+openai==1.3.7
+
+# Image processing
+Pillow>=10.0.0
+
+# JSON handling and utilities
+orjson==3.9.10
+
+# Async support
+asyncio-throttle==1.0.2
+
+# Logging and monitoring
+structlog==23.2.0
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2
+
+# Security
+python-multipart==0.0.6
+
+# CORS support (included in FastAPI)
+# Database support (if needed later)
+sqlalchemy==2.0.23
+databases[postgresql]==0.8.0
+
+# Additional utilities
+python-dateutil==2.8.2
+pytz==2023.3

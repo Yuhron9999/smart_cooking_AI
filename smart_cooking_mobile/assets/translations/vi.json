@@ -1,0 +1,40 @@
+{
+    "app": {
+        "name": "Smart Cooking AI",
+        "tagline": "Hệ thống nấu ăn thông minh"
+    },
+    "navigation": {
+        "home": "Trang chủ",
+        "recipes": "Công thức",
+        "ai_assistant": "Trợ lý AI",
+        "voice": "Giọng nói",
+        "profile": "Hồ sơ"
+    },
+    "recipe": {
+        "title": "Công thức nấu ăn",
+        "create": "Tạo công thức mới",
+        "ingredients": "Nguyên liệu",
+        "instructions": "Hướng dẫn",
+        "cooking_time": "Thời gian nấu",
+        "difficulty": "Độ khó",
+        "servings": "Khẩu phần"
+    },
+    "ai": {
+        "recipe_generation": "Tạo công thức từ AI",
+        "image_recognition": "Nhận dạng món ăn",
+        "chatbot": "Trò chuyện với AI",
+        "voice_assistant": "Trợ lý giọng nói"
+    },
+    "voice": {
+        "start_recording": "Bắt đầu ghi âm",
+        "stop_recording": "Dừng ghi âm",
+        "listening": "Đang nghe...",
+        "processing": "Đang xử lý...",
+        "speak_command": "Nói lệnh của bạn"
+    },
+    "welcome": "Chào mừng đến với Smart Cooking AI",
+    "quick_actions": "Thao tác nhanh",
+    "regional_suggestions": "Gợi ý món ăn theo vùng",
+    "add_ingredient": "Thêm nguyên liệu",
+    "close": "Đóng"
+}

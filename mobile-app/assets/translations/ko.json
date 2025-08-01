@@ -1,0 +1,223 @@
+{
+    "app": {
+        "name": "Smart Cooking AI",
+        "tagline": "지능형 요리 시스템"
+    },
+    "splash": {
+        "tagline": "AI로 스마트 요리",
+        "loading": "초기화 중...",
+        "version": "버전 {}"
+    },
+    "navigation": {
+        "home": "홈",
+        "recipes": "레시피",
+        "ai_assistant": "AI 어시스턴트",
+        "voice": "음성",
+        "profile": "프로필"
+    },
+    "auth": {
+        "login": "로그인",
+        "logout": "로그아웃",
+        "register": "회원가입",
+        "google_login": "Google로 로그인",
+        "email": "이메일",
+        "password": "비밀번호",
+        "confirm_password": "비밀번호 확인",
+        "forgot_password": "비밀번호를 잊으셨나요?",
+        "name": "이름",
+        "phone": "전화번호",
+        "login_success": "로그인 성공",
+        "logout_success": "로그아웃 성공",
+        "register_success": "회원가입 성공"
+    },
+    "recipe": {
+        "title": "요리 레시피",
+        "create": "새 레시피 만들기",
+        "edit": "레시피 편집",
+        "ingredients": "재료",
+        "instructions": "조리법",
+        "cooking_time": "조리 시간",
+        "prep_time": "준비 시간",
+        "difficulty": "난이도",
+        "servings": "인분",
+        "calories": "칼로리",
+        "category": "카테고리",
+        "cuisine": "요리",
+        "tags": "태그",
+        "description": "설명",
+        "save": "레시피 저장",
+        "delete": "레시피 삭제",
+        "share": "공유",
+        "favorite": "즐겨찾기",
+        "unfavorite": "즐겨찾기 해제",
+        "no_recipes": "레시피가 없습니다",
+        "search_placeholder": "레시피 검색..."
+    },
+    "difficulty": {
+        "easy": "쉬움",
+        "medium": "보통",
+        "hard": "어려움"
+    },
+    "categories": {
+        "breakfast": "아침식사",
+        "lunch": "점심식사",
+        "dinner": "저녁식사",
+        "dessert": "디저트",
+        "snack": "간식",
+        "beverage": "음료",
+        "appetizer": "전채",
+        "main_course": "메인 코스",
+        "side_dish": "반찬",
+        "soup": "수프",
+        "salad": "샐러드",
+        "vegetarian": "채식",
+        "vegan": "비건",
+        "gluten_free": "글루텐 프리"
+    },
+    "cuisines": {
+        "mien_bac": "북베트남",
+        "mien_trung": "중부베트남",
+        "mien_nam": "남베트남",
+        "asian": "아시아",
+        "european": "유럽",
+        "american": "미국",
+        "international": "국제"
+    },
+    "ai": {
+        "recipe_generation": "AI 레시피 생성",
+        "image_recognition": "음식 인식",
+        "chatbot": "AI와 채팅",
+        "voice_assistant": "음성 어시스턴트",
+        "nutrition_analysis": "영양 분석",
+        "cooking_tips": "요리 팁",
+        "ingredient_substitute": "재료 대체",
+        "meal_planning": "식사 계획"
+    },
+    "voice": {
+        "start_recording": "녹음 시작",
+        "stop_recording": "녹음 중지",
+        "listening": "듣는 중...",
+        "processing": "처리 중...",
+        "speak_command": "명령을 말해주세요",
+        "voice_not_supported": "음성이 지원되지 않습니다",
+        "microphone_permission": "마이크 권한이 필요합니다"
+    },
+    "location": {
+        "current_location": "현재 위치",
+        "find_stores": "상점 찾기",
+        "nearby_stores": "근처 상점",
+        "get_directions": "길찾기",
+        "distance": "거리",
+        "rating": "평점",
+        "regional_specialties": "지역 특산품",
+        "location_permission": "위치 권한이 필요합니다"
+    },
+    "nutrition": {
+        "calories": "칼로리",
+        "protein": "단백질",
+        "carbs": "탄수화물",
+        "fat": "지방",
+        "fiber": "섬유질",
+        "sugar": "설탕",
+        "sodium": "나트륨",
+        "cholesterol": "콜레스테롤",
+        "vitamins": "비타민",
+        "minerals": "미네랄",
+        "per_serving": "1인분당",
+        "daily_value": "일일 권장량"
+    },
+    "profile": {
+        "edit_profile": "프로필 편집",
+        "settings": "설정",
+        "language": "언어",
+        "theme": "테마",
+        "notifications": "알림",
+        "privacy": "개인정보",
+        "help": "도움말",
+        "about": "정보",
+        "contact": "연락처",
+        "rate_app": "앱 평가",
+        "share_app": "앱 공유"
+    },
+    "settings": {
+        "general": "일반",
+        "account": "계정",
+        "preferences": "환경설정",
+        "security": "보안",
+        "data": "데이터",
+        "support": "지원"
+    },
+    "onboarding": {
+        "welcome": "환영합니다",
+        "title1": "AI로 스마트 요리",
+        "subtitle1": "사용 가능한 재료로 맞춤 레시피 만들기",
+        "title2": "음성 어시스턴트",
+        "subtitle2": "요리 중 음성 제어",
+        "title3": "음식 인식",
+        "subtitle3": "사진을 찍어 인식 및 영양 분석",
+        "next": "다음",
+        "skip": "건너뛰기",
+        "get_started": "시작하기"
+    },
+    "errors": {
+        "network_error": "네트워크 연결 없음",
+        "server_error": "서버 오류",
+        "unknown_error": "알 수 없는 오류",
+        "timeout_error": "연결 시간 초과",
+        "validation_error": "잘못된 데이터",
+        "permission_denied": "권한이 거부됨",
+        "camera_error": "카메라 오류",
+        "microphone_error": "마이크 오류"
+    },
+    "messages": {
+        "success": "성공",
+        "loading": "로딩 중...",
+        "saving": "저장 중...",
+        "deleting": "삭제 중...",
+        "uploading": "업로드 중...",
+        "processing": "처리 중...",
+        "no_data": "데이터 없음",
+        "try_again": "다시 시도",
+        "cancel": "취소",
+        "confirm": "확인",
+        "done": "완료"
+    },
+    "buttons": {
+        "save": "저장",
+        "cancel": "취소",
+        "delete": "삭제",
+        "edit": "편집",
+        "add": "추가",
+        "remove": "제거",
+        "submit": "제출",
+        "reset": "재설정",
+        "retry": "재시도",
+        "close": "닫기",
+        "open": "열기",
+        "select": "선택",
+        "upload": "업로드",
+        "download": "다운로드"
+    },
+    "units": {
+        "gram": "그램",
+        "kilogram": "kg",
+        "liter": "리터",
+        "milliliter": "ml",
+        "cup": "컵",
+        "tablespoon": "큰술",
+        "teaspoon": "작은술",
+        "piece": "개",
+        "slice": "조각",
+        "clove": "쪽"
+    },
+    "time": {
+        "minutes": "분",
+        "hours": "시간",
+        "days": "일",
+        "weeks": "주",
+        "months": "월",
+        "years": "년",
+        "just_now": "방금",
+        "ago": "전"
+    }
+}

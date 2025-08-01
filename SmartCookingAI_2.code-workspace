@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "ai-service"
+		},
+		{
+			"path": "backend"
+		},
+		{
+			"path": "frontend-nextjs"
+		},
+		{
+			"path": "smart_cooking_mobile"
+		},
+		{
+			"path": "mobile-app"
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic",
+		"powershell.cwd": "mobile-app"
+	}
+}

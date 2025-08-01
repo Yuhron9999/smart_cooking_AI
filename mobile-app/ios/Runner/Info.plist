@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Smart Cooking AI</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>smart_cooking_ai</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	
+	<!-- Camera permission for food recognition -->
+	<key>NSCameraUsageDescription</key>
+	<string>Smart Cooking AI cần quyền truy cập camera để nhận dạng món ăn và chụp ảnh công thức.</string>
+	
+	<!-- Microphone permission for voice assistant -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Smart Cooking AI cần quyền truy cập microphone để sử dụng trợ lý giọng nói và ghi âm lệnh.</string>
+	
+	<!-- Photo library permission -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Smart Cooking AI cần quyền truy cập thư viện ảnh để chọn và tải lên hình ảnh công thức.</string>
+	
+	<!-- Location permission for regional features -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Smart Cooking AI cần quyền truy cập vị trí để gợi ý món ăn theo vùng miền và tìm cửa hàng nguyên liệu gần bạn.</string>
+	
+	<!-- Speech recognition permission -->
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Smart Cooking AI cần quyền nhận dạng giọng nói để hiểu lệnh bằng tiếng nói của bạn.</string>
+	
+	<!-- Google OAuth2 URL Schemes -->
+	<!-- Sẽ được cấu hình sau khi có Google client ID -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.smartcooking.ai</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- Thêm reversed client ID từ GoogleService-Info.plist -->
+				<string>com.googleusercontent.apps.REVERSED_CLIENT_ID</string>
+			</array>
+		</dict>
+	</array>
+	
+	<!-- Support for iOS 14+ -->
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	
+	<!-- Background modes nếu cần -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>background-processing</string>
+	</array>
+</dict>
+</plist>

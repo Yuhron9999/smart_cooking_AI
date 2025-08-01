@@ -1,0 +1,45 @@
+{
+    "include": [
+        "."
+    ],
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        "**/.*",
+        "venv",
+        "env"
+    ],
+    "defineConstant": {
+        "DEBUG": true
+    },
+    "reportMissingImports": "warning",
+    "reportMissingTypeStubs": "information",
+    "reportUnusedImport": "information",
+    "reportUnusedClass": "information",
+    "reportUnusedFunction": "information",
+    "reportUnusedVariable": "information",
+    "reportDuplicateImport": "warning",
+    "reportOptionalSubscript": "information",
+    "reportOptionalMemberAccess": "information",
+    "reportOptionalCall": "information",
+    "reportOptionalIterable": "information",
+    "reportOptionalContextManager": "information",
+    "reportOptionalOperand": "information",
+    "reportUnboundVariable": "error",
+    "reportGeneralTypeIssues": "warning",
+    "pythonVersion": "3.13",
+    "pythonPlatform": "Windows",
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "pythonVersion": "3.13",
+            "extraPaths": [
+                "./src"
+            ]
+        }
+    ],
+    "typeCheckingMode": "basic",
+    "useLibraryCodeForTypes": true,
+    "autoSearchPaths": true,
+    "autoImportCompletions": true
+}

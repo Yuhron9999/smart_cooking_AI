@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Cooking AI - Service Test</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 30px;
+        font-size: 2.5em;
+      }
+      .service-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+      .service-card {
+        border: 2px solid #e1e8ed;
+        border-radius: 10px;
+        padding: 20px;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+      }
+      .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        border-color: #3498db;
+      }
+      .service-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      .service-icon {
+        font-size: 2em;
+        margin-right: 10px;
+      }
+      .service-title {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #2c3e50;
+      }
+      .status {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        margin-left: auto;
+      }
+      .status.online {
+        background: #d4edda;
+        color: #155724;
+      }
+      .status.offline {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .status.testing {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .test-section {
+        margin-top: 20px;
+      }
+      .test-button {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        transition: background 0.3s ease;
+      }
+      .test-button:hover {
+        background: #2980b9;
+      }
+      .test-button:disabled {
+        background: #bdc3c7;
+        cursor: not-allowed;
+      }
+      .result-box {
+        background: #f1f3f4;
+        border-left: 4px solid #3498db;
+        padding: 15px;
+        margin-top: 10px;
+        border-radius: 5px;
+        max-height: 300px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+      }
+      .success {
+        border-left-color: #27ae60;
+        background: #d5f4e6;
+      }
+      .error {
+        border-left-color: #e74c3c;
+        background: #ffeaea;
+      }
+      .loading {
+        border-left-color: #f39c12;
+        background: #fff8e1;
+      }
+      .api-endpoints {
+        margin-top: 30px;
+        padding: 20px;
+        background: #ecf0f1;
+        border-radius: 10px;
+      }
+      .endpoint {
+        margin: 10px 0;
+        padding: 8px;
+        background: white;
+        border-radius: 5px;
+        font-family: monospace;
+      }
+      .method {
+        font-weight: bold;
+        color: #e74c3c;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🍳 Smart Cooking AI - System Test Dashboard</h1>
+
+      <div class="service-grid">
+        <!-- Backend Service -->
+        <div class="service-card" id="backend-card">
+          <div class="service-header">
+            <span class="service-icon">🏗️</span>
+            <span class="service-title">Backend API</span>
+            <span class="status testing" id="backend-status">Testing...</span>
+          </div>
+          <p>
+            <strong>Port:</strong> 8080 | <strong>Framework:</strong> Spring
+            Boot
+          </p>
+          <div class="test-section">
+            <button class="test-button" onclick="testBackend()">
+              Test Health
+            </button>
+            <button class="test-button" onclick="testBackendAuth()">
+              Test Auth
+            </button>
+            <div class="result-box" id="backend-result">
+              Click test buttons above...
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Service -->
+        <div class="service-card" id="ai-card">
+          <div class="service-header">
+            <span class="service-icon">🤖</span>
+            <span class="service-title">AI Service</span>
+            <span class="status testing" id="ai-status">Testing...</span>
+          </div>
+          <p>
+            <strong>Port:</strong> 8001 | <strong>Framework:</strong> FastAPI
+          </p>
+          <div class="test-section">
+            <button class="test-button" onclick="testAIHealth()">
+              Test Health
+            </button>
+            <button class="test-button" onclick="testAIChat()">
+              Test Chat
+            </button>
+            <button class="test-button" onclick="testAIRecipe()">
+              Test Recipe
+            </button>
+            <div class="result-box" id="ai-result">
+              Click test buttons above...
+            </div>
+          </div>
+        </div>
+
+        <!-- Frontend -->
+        <div class="service-card" id="frontend-card">
+          <div class="service-header">
+            <span class="service-icon">🌐</span>
+            <span class="service-title">Frontend Web</span>
+            <span class="status testing" id="frontend-status">Testing...</span>
+          </div>
+          <p>
+            <strong>Port:</strong> 3001 | <strong>Framework:</strong> Next.js
+          </p>
+          <div class="test-section">
+            <button class="test-button" onclick="testFrontend()">
+              Test Homepage
+            </button>
+            <button class="test-button" onclick="openFrontend()">
+              Open App
+            </button>
+            <div class="result-box" id="frontend-result">
+              Click test buttons above...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Endpoints Documentation -->
+      <div class="api-endpoints">
+        <h3>📋 Available API Endpoints</h3>
+
+        <h4>🏗️ Backend (Spring Boot) - Port 8080</h4>
+        <div class="endpoint">
+          <span class="method">GET</span> /api/health - Health check
+        </div>
+        <div class="endpoint">
+          <span class="method">POST</span> /api/auth/google-login - Google OAuth
+        </div>
+        <div class="endpoint">
+          <span class="method">POST</span> /api/ai/chat - Proxy to AI service
+        </div>
+        <div class="endpoint">
+          <span class="method">POST</span> /api/ai/generate-recipe - Recipe
+          generation
+        </div>
+
+        <h4>🤖 AI Service (FastAPI) - Port 8001</h4>
+        <div class="endpoint">
+          <span class="method">GET</span> /health - Service health
+        </div>
+        <div class="endpoint">
+          <span class="method">POST</span> /api/ai/chat - Chat with AI
+        </div>
+        <div class="endpoint">
+          <span class="method">POST</span> /api/ai/generate-recipe - Generate
+          recipes
+        </div>
+        <div class="endpoint">
+          <span class="method">POST</span> /api/ai/vision - Image analysis
+        </div>
+
+        <h4>🌐 Frontend (Next.js) - Port 3001</h4>
+        <div class="endpoint"><span class="method">GET</span> / - Homepage</div>
+        <div class="endpoint">
+          <span class="method">GET</span> /ai-chat - AI Chat Interface
+        </div>
+        <div class="endpoint">
+          <span class="method">GET</span> /recipes - Recipe Management
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Test functions
+      async function testBackend() {
+        updateResult("backend-result", "Testing Backend Health...", "loading");
+        try {
+          const response = await fetch("http://localhost:8080/api/health");
+          const data = await response.json();
+          updateResult(
+            "backend-result",
+            JSON.stringify(data, null, 2),
+            "success"
+          );
+          updateStatus("backend-status", "Online", "online");
+        } catch (error) {
+          updateResult("backend-result", "Error: " + error.message, "error");
+          updateStatus("backend-status", "Offline", "offline");
+        }
+      }
+
+      async function testBackendAuth() {
+        updateResult("backend-result", "Testing Backend Auth...", "loading");
+        try {
+          const response = await fetch("http://localhost:8080/api/auth/me");
+          const data = await response.json();
+          updateResult(
+            "backend-result",
+            JSON.stringify(data, null, 2),
+            "success"
+          );
+        } catch (error) {
+          updateResult(
+            "backend-result",
+            "Auth Error: " + error.message,
+            "error"
+          );
+        }
+      }
+
+      async function testAIHealth() {
+        updateResult("ai-result", "Testing AI Service Health...", "loading");
+        try {
+          const response = await fetch("http://localhost:8001/health");
+          const data = await response.json();
+          updateResult("ai-result", JSON.stringify(data, null, 2), "success");
+          updateStatus("ai-status", "Online", "online");
+        } catch (error) {
+          updateResult("ai-result", "Error: " + error.message, "error");
+          updateStatus("ai-status", "Offline", "offline");
+        }
+      }
+
+      async function testAIChat() {
+        updateResult("ai-result", "Testing AI Chat...", "loading");
+        try {
+          const response = await fetch("http://localhost:8001/api/ai/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: "Xin chào, bạn có thể giúp tôi nấu ăn không?",
+              language: "vi",
+            }),
+          });
+          const data = await response.json();
+          updateResult("ai-result", JSON.stringify(data, null, 2), "success");
+        } catch (error) {
+          updateResult("ai-result", "Chat Error: " + error.message, "error");
+        }
+      }
+
+      async function testAIRecipe() {
+        updateResult("ai-result", "Testing AI Recipe Generation...", "loading");
+        try {
+          const response = await fetch(
+            "http://localhost:8001/api/ai/generate-recipe",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ingredients: ["thịt bò", "hành tây", "tỏi", "gừng"],
+                language: "vi",
+                difficulty: "medium",
+                cooking_time: 30,
+              }),
+            }
+          );
+          const data = await response.json();
+          updateResult("ai-result", JSON.stringify(data, null, 2), "success");
+        } catch (error) {
+          updateResult("ai-result", "Recipe Error: " + error.message, "error");
+        }
+      }
+
+      async function testFrontend() {
+        updateResult("frontend-result", "Testing Frontend...", "loading");
+        try {
+          const response = await fetch("http://localhost:3001");
+          if (response.ok) {
+            updateResult(
+              "frontend-result",
+              "Frontend is accessible and running!",
+              "success"
+            );
+            updateStatus("frontend-status", "Online", "online");
+          } else {
+            updateResult(
+              "frontend-result",
+              "Frontend returned status: " + response.status,
+              "error"
+            );
+            updateStatus("frontend-status", "Error", "offline");
+          }
+        } catch (error) {
+          updateResult("frontend-result", "Error: " + error.message, "error");
+          updateStatus("frontend-status", "Offline", "offline");
+        }
+      }
+
+      function openFrontend() {
+        window.open("http://localhost:3001", "_blank");
+      }
+
+      // Utility functions
+      function updateResult(elementId, content, type) {
+        const element = document.getElementById(elementId);
+        element.textContent = content;
+        element.className = "result-box " + type;
+      }
+
+      function updateStatus(elementId, text, status) {
+        const element = document.getElementById(elementId);
+        element.textContent = text;
+        element.className = "status " + status;
+      }
+
+      // Auto-run initial tests
+      window.onload = function () {
+        setTimeout(() => {
+          testBackend();
+          testAIHealth();
+          testFrontend();
+        }, 1000);
+      };
+    </script>
+  </body>
+</html>

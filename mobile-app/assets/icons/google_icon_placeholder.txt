@@ -1,0 +1,9 @@
+# Google Icon Placeholder
+
+Bạn cần thêm file google_icon.png vào thư mục này.
+
+Hoặc sử dụng icon từ internet:
+https://developers.google.com/identity/images/g-logo.png
+
+Kích thước khuyến nghị: 24x24px hoặc 48x48px
+Format: PNG với nền trong suốt

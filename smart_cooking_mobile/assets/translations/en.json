@@ -1,0 +1,40 @@
+{
+    "app": {
+        "name": "Smart Cooking AI",
+        "tagline": "Intelligent Cooking System"
+    },
+    "navigation": {
+        "home": "Home",
+        "recipes": "Recipes",
+        "ai_assistant": "AI Assistant",
+        "voice": "Voice",
+        "profile": "Profile"
+    },
+    "recipe": {
+        "title": "Cooking Recipes",
+        "create": "Create New Recipe",
+        "ingredients": "Ingredients",
+        "instructions": "Instructions",
+        "cooking_time": "Cooking Time",
+        "difficulty": "Difficulty",
+        "servings": "Servings"
+    },
+    "ai": {
+        "recipe_generation": "AI Recipe Generation",
+        "image_recognition": "Food Recognition",
+        "chatbot": "Chat with AI",
+        "voice_assistant": "Voice Assistant"
+    },
+    "voice": {
+        "start_recording": "Start Recording",
+        "stop_recording": "Stop Recording",
+        "listening": "Listening...",
+        "processing": "Processing...",
+        "speak_command": "Speak your command"
+    },
+    "welcome": "Welcome to Smart Cooking AI",
+    "quick_actions": "Quick Actions",
+    "regional_suggestions": "Regional Food Suggestions",
+    "add_ingredient": "Add ingredient",
+    "close": "Close"
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Translation Test</title>
+  </head>
+  <body>
+    <h1>Flutter Translation Test</h1>
+
+    <p>Testing translation file paths:</p>
+    <ul>
+      <li><a href="assets/translations/vi.json" target="_blank">vi.json</a></li>
+      <li><a href="assets/translations/en.json" target="_blank">en.json</a></li>
+      <li><a href="assets/translations/ja.json" target="_blank">ja.json</a></li>
+    </ul>
+
+    <p>If these links return 404, the asset path is incorrect.</p>
+
+    <script>
+      // Test fetch translations
+      async function testTranslations() {
+        const languages = ["vi", "en", "ja", "ko", "zh"];
+
+        for (const lang of languages) {
+          try {
+            const response = await fetch(`assets/translations/${lang}.json`);
+            if (response.ok) {
+              console.log(`✅ ${lang}.json loaded successfully`);
+              const data = await response.json();
+              console.log(`${lang} app.name:`, data.app?.name);
+            } else {
+              console.log(`❌ ${lang}.json failed to load:`, response.status);
+            }
+          } catch (error) {
+            console.log(`❌ ${lang}.json error:`, error);
+          }
+        }
+      }
+
+      // Run test when page loads
+      testTranslations();
+    </script>
+  </body>
+</html>

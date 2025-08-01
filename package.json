@@ -1,0 +1,35 @@
+{
+    "name": "smart-cooking-ai",
+    "version": "1.0.0",
+    "description": "Hệ thống AI thông minh hỗ trợ nấu ăn",
+    "main": "index.js",
+    "scripts": {
+        "dev": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run ai-service\"",
+        "backend": "cd backend && ./mvnw spring-boot:run",
+        "frontend": "cd frontend-nextjs && npm run dev",
+        "ai-service": "cd ai-service && python app.py",
+        "build": "cd frontend-nextjs && npm run build",
+        "test": "npm run test:backend && npm run test:frontend",
+        "test:backend": "cd backend && ./mvnw test",
+        "test:frontend": "cd frontend-nextjs && npm test",
+        "install:all": "npm install && cd backend && echo 'Backend uses Maven' && cd ../frontend-nextjs && npm install && cd ../ai-service && pip install -r requirements.txt"
+    },
+    "keywords": [
+        "cooking",
+        "ai",
+        "food-recognition",
+        "recipe-suggestion",
+        "nodejs",
+        "react",
+        "tensorflow"
+    ],
+    "author": "Smart Cooking AI Team",
+    "license": "MIT",
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    },
+    "workspaces": [
+        "backend",
+        "frontend-nextjs"
+    ]
+}

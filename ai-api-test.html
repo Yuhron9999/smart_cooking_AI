@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Smart Cooking AI APIs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">
+        🧪 Test Smart Cooking AI APIs
+      </h1>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- AI Chat Test -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-semibold mb-4 text-blue-600">💬 AI Chat</h2>
+          <textarea
+            id="chatMessage"
+            class="w-full p-3 border rounded-lg mb-3"
+            placeholder="Nhập câu hỏi cho AI..."
+          ></textarea>
+          <button
+            onclick="testChat()"
+            class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+          >
+            Test Chat
+          </button>
+          <div
+            id="chatResult"
+            class="mt-4 p-3 bg-gray-50 rounded-lg hidden"
+          ></div>
+        </div>
+
+        <!-- Recipe Generation Test -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-semibold mb-4 text-green-600">
+            📝 Tạo Công Thức
+          </h2>
+          <textarea
+            id="recipeIngredients"
+            class="w-full p-3 border rounded-lg mb-3"
+            placeholder="Nhập nguyên liệu (cách nhau bởi dấu phẩy)..."
+          ></textarea>
+          <button
+            onclick="testRecipeGeneration()"
+            class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600"
+          >
+            Tạo Công Thức
+          </button>
+          <div
+            id="recipeResult"
+            class="mt-4 p-3 bg-gray-50 rounded-lg hidden"
+          ></div>
+        </div>
+
+        <!-- Ingredient Suggestions Test -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-semibold mb-4 text-orange-600">
+            🥕 Gợi Ý Nguyên Liệu
+          </h2>
+          <input
+            id="dishName"
+            class="w-full p-3 border rounded-lg mb-3"
+            placeholder="Nhập tên món ăn..."
+          />
+          <button
+            onclick="testIngredientSuggestions()"
+            class="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600"
+          >
+            Gợi Ý Nguyên Liệu
+          </button>
+          <div
+            id="ingredientResult"
+            class="mt-4 p-3 bg-gray-50 rounded-lg hidden"
+          ></div>
+        </div>
+
+        <!-- Learning Path Test -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-semibold mb-4 text-purple-600">
+            📚 Lộ Trình Học
+          </h2>
+          <label for="skillLevel" class="block mb-1 font-medium text-gray-700">Chọn trình độ kỹ năng</label>
+          <select id="skillLevel" class="w-full p-3 border rounded-lg mb-3" title="Chọn trình độ kỹ năng">
+            <option value="beginner">Người mới bắt đầu</option>
+            <option value="intermediate">Trung cấp</option>
+            <option value="advanced">Nâng cao</option>
+          </select>
+          <button
+            onclick="testLearningPath()"
+            class="w-full bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600"
+          >
+            Tạo Lộ Trình
+          </button>
+          <div
+            id="learningResult"
+            class="mt-4 p-3 bg-gray-50 rounded-lg hidden"
+          ></div>
+        </div>
+
+        <!-- Nutrition Analysis Test -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-semibold mb-4 text-red-600">
+            🍎 Phân Tích Dinh Dưỡng
+          </h2>
+          <textarea
+            id="nutritionIngredients"
+            class="w-full p-3 border rounded-lg mb-3"
+            placeholder="Nhập nguyên liệu (cách nhau bởi dấu phẩy)..."
+          ></textarea>
+          <button
+            onclick="testNutritionAnalysis()"
+            class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+          >
+            Phân Tích Dinh Dưỡng
+          </button>
+          <div
+            id="nutritionResult"
+            class="mt-4 p-3 bg-gray-50 rounded-lg hidden"
+          ></div>
+        </div>
+
+        <!-- AI Service Health Check -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-semibold mb-4 text-indigo-600">
+            🔧 Health Check
+          </h2>
+          <button
+            onclick="testHealthCheck()"
+            class="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 mb-3"
+          >
+            Kiểm Tra AI Service
+          </button>
+          <button
+            onclick="testBackendHealth()"
+            class="w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600"
+          >
+            Kiểm Tra Backend
+          </button>
+          <div
+            id="healthResult"
+            class="mt-4 p-3 bg-gray-50 rounded-lg hidden"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Global Results -->
+      <div id="globalResults" class="mt-8 hidden">
+        <h2 class="text-2xl font-semibold mb-4">📊 Kết Quả Test</h2>
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <pre id="globalResultsContent" class="text-sm overflow-x-auto"></pre>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Base API URL
+      const API_BASE = "http://localhost:8080/api";
+
+      // Utility function to display results
+      function displayResult(elementId, data, isError = false) {
+        const element = document.getElementById(elementId);
+        element.classList.remove("hidden");
+        element.className = `mt-4 p-3 rounded-lg ${isError ? "bg-red-50 text-red-800" : "bg-gray-50"}`;
+        element.innerHTML = `<pre class="text-sm overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>`;
+      }
+
+      // Test AI Chat
+      async function testChat() {
+        const message = document.getElementById("chatMessage").value;
+        if (!message.trim()) {
+          alert("Vui lòng nhập câu hỏi");
+          return;
+        }
+
+        try {
+          const response = await fetch(`${API_BASE}/ai/chat`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: message,
+              language: "vi",
+            }),
+          });
+          const data = await response.json();
+          displayResult("chatResult", data);
+        } catch (error) {
+          displayResult("chatResult", { error: error.message }, true);
+        }
+      }
+
+      // Test Recipe Generation
+      async function testRecipeGeneration() {
+        const ingredients = document.getElementById("recipeIngredients").value;
+        if (!ingredients.trim()) {
+          alert("Vui lòng nhập nguyên liệu");
+          return;
+        }
+
+        try {
+          const response = await fetch(`${API_BASE}/ai/generate-recipe`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ingredients: ingredients.split(",").map((i) => i.trim()),
+              preferences: {},
+              language: "vi",
+            }),
+          });
+          const data = await response.json();
+          displayResult("recipeResult", data);
+        } catch (error) {
+          displayResult("recipeResult", { error: error.message }, true);
+        }
+      }
+
+      // Test Ingredient Suggestions
+      async function testIngredientSuggestions() {
+        const dishName = document.getElementById("dishName").value;
+        if (!dishName.trim()) {
+          alert("Vui lòng nhập tên món ăn");
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `${API_BASE}/ai/ingredient-suggestions`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                dish_name: dishName,
+                cuisine_type: "vietnamese",
+              }),
+            }
+          );
+          const data = await response.json();
+          displayResult("ingredientResult", data);
+        } catch (error) {
+          displayResult("ingredientResult", { error: error.message }, true);
+        }
+      }
+
+      // Test Learning Path
+      async function testLearningPath() {
+        const skillLevel = document.getElementById("skillLevel").value;
+
+        try {
+          const response = await fetch(`${API_BASE}/ai/learning-path`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              skill_level: skillLevel,
+              cuisine_preference: "vietnamese",
+              available_time: 30,
+            }),
+          });
+          const data = await response.json();
+          displayResult("learningResult", data);
+        } catch (error) {
+          displayResult("learningResult", { error: error.message }, true);
+        }
+      }
+
+      // Test Nutrition Analysis
+      async function testNutritionAnalysis() {
+        const ingredients = document.getElementById(
+          "nutritionIngredients"
+        ).value;
+        if (!ingredients.trim()) {
+          alert("Vui lòng nhập nguyên liệu");
+          return;
+        }
+
+        try {
+          const response = await fetch(`${API_BASE}/ai/nutrition-analysis`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ingredients: ingredients.split(",").map((i) => i.trim()),
+              servings: 4,
+            }),
+          });
+          const data = await response.json();
+          displayResult("nutritionResult", data);
+        } catch (error) {
+          displayResult("nutritionResult", { error: error.message }, true);
+        }
+      }
+
+      // Test AI Service Health
+      async function testHealthCheck() {
+        try {
+          const response = await fetch(`${API_BASE}/ai/health`);
+          const data = await response.json();
+          displayResult("healthResult", data);
+        } catch (error) {
+          displayResult("healthResult", { error: error.message }, true);
+        }
+      }
+
+      // Test Backend Health
+      async function testBackendHealth() {
+        try {
+          const response = await fetch(`${API_BASE}/health`);
+          const text = await response.text();
+          displayResult("healthResult", {
+            status: "Backend is running",
+            response: text,
+          });
+        } catch (error) {
+          displayResult("healthResult", { error: error.message }, true);
+        }
+      }
+
+      // Initial load - test backend connectivity
+      window.onload = function () {
+        setTimeout(testBackendHealth, 1000);
+      };
+    </script>
+  </body>
+</html>
