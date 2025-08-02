@@ -46,7 +46,7 @@ https://127.0.0.1:3000/api/auth/callback/google
 - [ ] Redirect URIs đã được thêm chính xác
 - [ ] Đã lưu thay đổi thành công
 
-## 🔑 THÔNG TIN CLIENT 
+## 🔑 THÔNG TIN CLIENT
 
 ```env
 # Add these to your .env.local file (NOT in Git):
@@ -54,7 +54,8 @@ GOOGLE_CLIENT_ID=your_actual_google_client_id_from_console
 GOOGLE_CLIENT_SECRET=your_actual_google_client_secret_from_console
 ```
 
-> ⚠️ **BẢO MẬT QUAN TRỌNG:** 
+> ⚠️ **BẢO MẬT QUAN TRỌNG:**
+>
 > - KHÔNG BAO GIỜ commit API keys vào Git
 > - Chỉ lưu trong `.env.local` (đã được gitignore)
 > - Tạo các giá trị này từ Google Cloud Console
