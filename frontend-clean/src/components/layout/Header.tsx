@@ -37,11 +37,11 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const router = useRouter();
-    
+
     // Fallback translations để tránh lỗi i18n context
     const fallbackTranslations = {
         'navigation.home': 'Trang Chủ',
-        'navigation.recipes': 'Công Thức', 
+        'navigation.recipes': 'Công Thức',
         'navigation.ai_chat': 'AI Chat',
         'navigation.profile': 'Hồ Sơ',
         'navigation.voice': 'Voice Chef',

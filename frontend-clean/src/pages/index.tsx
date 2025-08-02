@@ -9,7 +9,7 @@ import NumberDisplay from '@/components/common/NumberDisplay';
 // Animation Hook
 const useScrollAnimation = () => {
     const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set());
-    
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -76,13 +76,13 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
             <Header />
 
             {/* Hero Section với Advanced Animations */}
-            <section 
+            <section
                 id="hero"
                 className="animation-target relative bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 text-white overflow-hidden"
             >
                 {/* Animated Background Elements */}
                 <div className="absolute inset-0">
-                    <div 
+                    <div
                         className="absolute w-96 h-96 bg-white/10 rounded-full blur-3xl animate-float"
                         style={{
                             top: '20%',
@@ -91,7 +91,7 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                             animation: 'float 6s ease-in-out infinite'
                         }}
                     />
-                    <div 
+                    <div
                         className="absolute w-64 h-64 bg-yellow-300/20 rounded-full blur-2xl animate-pulse"
                         style={{
                             top: '60%',
@@ -100,7 +100,7 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                             animationDelay: '2s'
                         }}
                     />
-                    <div 
+                    <div
                         className="absolute w-80 h-80 bg-blue-400/15 rounded-full blur-3xl"
                         style={{
                             top: '40%',
@@ -112,27 +112,24 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                 </div>
 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-                    <div className={`text-center transition-all duration-1000 transform ${
-                        visibleElements.has('hero') 
-                            ? 'translate-y-0 opacity-100' 
+                    <div className={`text-center transition-all duration-1000 transform ${visibleElements.has('hero')
+                            ? 'translate-y-0 opacity-100'
                             : 'translate-y-10 opacity-0'
-                    }`}>
+                        }`}>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-text-shimmer bg-gradient-to-r from-white via-yellow-200 to-white bg-[length:200%_100%] bg-clip-text text-transparent">
                             Nấu Ăn Thông Minh với AI 🤖
                         </h1>
-                        <p className={`text-xl md:text-2xl mb-8 max-w-3xl mx-auto transition-all duration-1000 delay-300 transform ${
-                            visibleElements.has('hero') 
-                                ? 'translate-y-0 opacity-100' 
+                        <p className={`text-xl md:text-2xl mb-8 max-w-3xl mx-auto transition-all duration-1000 delay-300 transform ${visibleElements.has('hero')
+                                ? 'translate-y-0 opacity-100'
                                 : 'translate-y-10 opacity-0'
-                        }`}>
+                            }`}>
                             Khám phá thế giới ẩm thực với trợ lý AI thông minh.
                             Tạo công thức, học nấu ăn và trở thành chef chuyên nghiệp.
                         </p>
-                        <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-1000 delay-500 transform ${
-                            visibleElements.has('hero') 
-                                ? 'translate-y-0 opacity-100' 
+                        <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-1000 delay-500 transform ${visibleElements.has('hero')
+                                ? 'translate-y-0 opacity-100'
                                 : 'translate-y-10 opacity-0'
-                        }`}>
+                            }`}>
                             <button className="group relative px-8 py-4 bg-white text-orange-500 font-bold rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl">
                                 <span className="relative z-10 flex items-center justify-center">
                                     ✨ Thử Trợ Lý AI
@@ -152,7 +149,7 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
             </section>
 
             {/* Stats Section với Counter Animation */}
-            <section 
+            <section
                 id="stats"
                 className="animation-target py-16 bg-white relative overflow-hidden"
             >
@@ -166,11 +163,10 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                 </div>
 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 text-center transition-all duration-1000 transform ${
-                        visibleElements.has('stats') 
-                            ? 'translate-y-0 opacity-100' 
+                    <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 text-center transition-all duration-1000 transform ${visibleElements.has('stats')
+                            ? 'translate-y-0 opacity-100'
                             : 'translate-y-10 opacity-0'
-                    }`}>
+                        }`}>
                         <div className="group p-6 rounded-2xl hover:bg-gradient-to-br hover:from-orange-50 hover:to-pink-50 transition-all duration-500 hover:scale-105 hover:shadow-lg">
                             <div className="relative">
                                 <NumberDisplay
@@ -183,7 +179,7 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                                 Công Thức
                             </div>
                         </div>
-                        
+
                         <div className="group p-6 rounded-2xl hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 transition-all duration-500 hover:scale-105 hover:shadow-lg">
                             <div className="relative">
                                 <NumberDisplay
@@ -196,7 +192,7 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                                 Người Dùng
                             </div>
                         </div>
-                        
+
                         <div className="group p-6 rounded-2xl hover:bg-gradient-to-br hover:from-green-50 hover:to-teal-50 transition-all duration-500 hover:scale-105 hover:shadow-lg">
                             <div className="relative">
                                 <NumberDisplay
@@ -209,7 +205,7 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                                 Bài Học
                             </div>
                         </div>
-                        
+
                         <div className="group p-6 rounded-2xl hover:bg-gradient-to-br hover:from-yellow-50 hover:to-orange-50 transition-all duration-500 hover:scale-105 hover:shadow-lg">
                             <div className="relative">
                                 <NumberDisplay
@@ -228,16 +224,15 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
             </section>
 
             {/* Featured Recipes với Stagger Animation */}
-            <section 
+            <section
                 id="recipes"
                 className="animation-target py-16 bg-gradient-to-br from-gray-50 to-white relative"
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className={`text-center mb-12 transition-all duration-1000 transform ${
-                        visibleElements.has('recipes') 
-                            ? 'translate-y-0 opacity-100' 
+                    <div className={`text-center mb-12 transition-all duration-1000 transform ${visibleElements.has('recipes')
+                            ? 'translate-y-0 opacity-100'
                             : 'translate-y-10 opacity-0'
-                    }`}>
+                        }`}>
                         <h2 className="text-3xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
                             🍲 Công Thức Nổi Bật
                         </h2>
@@ -248,14 +243,13 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {featuredRecipes.map((recipe, index) => (
-                            <div 
-                                key={recipe.id} 
-                                className={`group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-translate-y-2 ${
-                                    visibleElements.has('recipes') 
-                                        ? 'translate-y-0 opacity-100' 
+                            <div
+                                key={recipe.id}
+                                className={`group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-translate-y-2 ${visibleElements.has('recipes')
+                                        ? 'translate-y-0 opacity-100'
                                         : 'translate-y-10 opacity-0'
-                                }`}
-                                style={{ 
+                                    }`}
+                                style={{
                                     transitionDelay: visibleElements.has('recipes') ? `${index * 200}ms` : '0ms'
                                 }}
                             >
@@ -280,15 +274,14 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                                     <p className="text-gray-600 mb-4 line-clamp-2 group-hover:text-gray-700 transition-colors duration-300">
                                         {recipe.description}
                                     </p>
-                                    
+
                                     <div className="flex justify-between items-center text-sm mb-4">
-                                        <span className={`px-3 py-1 rounded-full font-medium transition-all duration-300 group-hover:scale-105 ${
-                                            recipe.difficulty === 'EASY' 
+                                        <span className={`px-3 py-1 rounded-full font-medium transition-all duration-300 group-hover:scale-105 ${recipe.difficulty === 'EASY'
                                                 ? 'bg-green-100 text-green-600 group-hover:bg-green-200' :
-                                            recipe.difficulty === 'MEDIUM' 
-                                                ? 'bg-yellow-100 text-yellow-600 group-hover:bg-yellow-200' :
-                                                'bg-red-100 text-red-600 group-hover:bg-red-200'
-                                        }`}>
+                                                recipe.difficulty === 'MEDIUM'
+                                                    ? 'bg-yellow-100 text-yellow-600 group-hover:bg-yellow-200' :
+                                                    'bg-red-100 text-red-600 group-hover:bg-red-200'
+                                            }`}>
                                             {recipe.difficulty}
                                         </span>
                                         <div className="flex items-center gap-3">
@@ -321,7 +314,7 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
             </section>
 
             {/* Features Section với Interactive Cards */}
-            <section 
+            <section
                 id="features"
                 className="animation-target py-16 bg-white relative overflow-hidden"
             >
@@ -333,16 +326,15 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                 </div>
 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className={`text-center mb-12 transition-all duration-1000 transform ${
-                        visibleElements.has('features') 
-                            ? 'translate-y-0 opacity-100' 
+                    <div className={`text-center mb-12 transition-all duration-1000 transform ${visibleElements.has('features')
+                            ? 'translate-y-0 opacity-100'
                             : 'translate-y-10 opacity-0'
-                    }`}>
+                        }`}>
                         <h2 className="text-3xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                             🚀 Tính Năng Nổi Bật
                         </h2>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
                             {
@@ -354,7 +346,7 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                             },
                             {
                                 icon: "🎤",
-                                title: "Voice Assistant", 
+                                title: "Voice Assistant",
                                 description: "Hướng dẫn nấu ăn bằng giọng nói thông minh",
                                 gradient: "from-green-500 to-teal-600",
                                 delay: 200
@@ -367,20 +359,19 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                                 delay: 400
                             }
                         ].map((feature, index) => (
-                            <div 
+                            <div
                                 key={index}
-                                className={`group relative text-center p-8 bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-700 hover:scale-105 hover:-translate-y-4 ${
-                                    visibleElements.has('features') 
-                                        ? 'translate-y-0 opacity-100' 
+                                className={`group relative text-center p-8 bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-700 hover:scale-105 hover:-translate-y-4 ${visibleElements.has('features')
+                                        ? 'translate-y-0 opacity-100'
                                         : 'translate-y-10 opacity-0'
-                                }`}
-                                style={{ 
+                                    }`}
+                                style={{
                                     transitionDelay: visibleElements.has('features') ? `${feature.delay}ms` : '0ms'
                                 }}
                             >
                                 {/* Background Glow */}
                                 <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                                
+
                                 {/* Icon Container */}
                                 <div className="relative mb-6">
                                     <div className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-r ${feature.gradient} text-white text-3xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg group-hover:shadow-xl`}>
@@ -414,13 +405,13 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
             </section>
 
             {/* CTA Section với Magnetic Effect */}
-            <section 
+            <section
                 id="cta"
                 className="animation-target py-16 relative overflow-hidden"
             >
                 {/* Animated Gradient Background */}
                 <div className="absolute inset-0 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 animate-gradient-x" />
-                
+
                 {/* Floating Elements */}
                 <div className="absolute inset-0">
                     <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-float-slow" />
@@ -429,21 +420,20 @@ const HomePage: NextPage<HomePageProps> = ({ featuredRecipes, stats }) => {
                     <div className="absolute bottom-10 right-10 w-12 h-12 bg-blue-300/20 rounded-full animate-float" style={{ animationDelay: '1s' }} />
                 </div>
 
-                <div className={`relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white transition-all duration-1000 transform ${
-                    visibleElements.has('cta') 
-                        ? 'translate-y-0 opacity-100' 
+                <div className={`relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white transition-all duration-1000 transform ${visibleElements.has('cta')
+                        ? 'translate-y-0 opacity-100'
                         : 'translate-y-10 opacity-0'
-                }`}>
+                    }`}>
                     <h2 className="text-3xl font-bold mb-4 animate-text-shimmer bg-gradient-to-r from-white via-yellow-200 to-white bg-[length:200%_100%] bg-clip-text text-transparent">
                         🎯 Sẵn sàng bắt đầu hành trình nấu ăn?
                     </h2>
                     <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
                         Tham gia cộng đồng Smart Cooking AI ngay hôm nay và khám phá thế giới ẩm thực không giới hạn.
                     </p>
-                    
+
                     {/* Magnetic Button */}
                     <div className="inline-block">
-                        <button 
+                        <button
                             className="group relative px-12 py-4 bg-white text-gray-800 font-bold text-lg rounded-full overflow-hidden hover:scale-110 transition-all duration-500 hover:shadow-2xl hover:shadow-white/25"
                             onMouseMove={(e) => {
                                 const rect = e.currentTarget.getBoundingClientRect();
