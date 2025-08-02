@@ -1,4 +1,4 @@
-/* Custom animations for Smart Cooking AI */
+/* Custom animations for Smart Cooking AI - Enhanced */
 
 @keyframes blob {
   0% {
@@ -13,6 +13,33 @@
   100% {
     transform: translate(0px, 0px) scale(1);
   }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes float-slow {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(5deg); }
+}
+
+@keyframes gradient-x {
+    0%, 100% {
+        background-size: 200% 200%;
+        background-position: left center;
+    }
+    50% {
+        background-size: 200% 200%;
+        background-position: right center;
+    }
+}
+
+@keyframes text-shimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 @keyframes gradient {
@@ -60,10 +87,32 @@
   }
 }
 
+/* Animation Classes */
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+    animation: float-slow 8s ease-in-out infinite;
+}
+
 .animate-blob {
   animation: blob 7s infinite;
 }
 
+.animate-gradient-x {
+    animation: gradient-x 15s ease infinite;
+}
+
+.animate-text-shimmer {
+    animation: text-shimmer 3s ease-in-out infinite;
+}
+
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+.animation-delay-1000 { animation-delay: 1000ms; }
 .animation-delay-2000 {
   animation-delay: 2s;
 }
