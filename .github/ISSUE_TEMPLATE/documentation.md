@@ -1,12 +1,13 @@
 ---
 name: 📚 Documentation
 about: Improve or add documentation for Smart Cooking AI
-title: '[DOCS] '
-labels: ['documentation', 'needs-triage']
-assignees: ['Yuhron9999']
+title: "[DOCS] "
+labels: ["documentation", "needs-triage"]
+assignees: ["Yuhron9999"]
 ---
 
 ## 📚 Documentation Type
+
 - [ ] 📖 New documentation
 - [ ] ✏️ Update existing documentation
 - [ ] 🐛 Fix documentation error
@@ -16,7 +17,9 @@ assignees: ['Yuhron9999']
 - [ ] 🏗️ Architecture documentation
 
 ## 📍 Location/Section
+
 **Which part of the documentation needs attention?**
+
 - [ ] README.md
 - [ ] Setup/Installation guides
 - [ ] API documentation
@@ -29,7 +32,9 @@ assignees: ['Yuhron9999']
 - [ ] Other: [specify]
 
 ## 📝 Current Issue
+
 **What's wrong with the current documentation?**
+
 - [ ] Information is outdated
 - [ ] Information is missing
 - [ ] Information is incorrect
@@ -41,12 +46,15 @@ assignees: ['Yuhron9999']
 - [ ] Other: [describe]
 
 ## ✨ Proposed Changes
+
 **What should be added, updated, or improved?**
 
 A clear description of the documentation changes needed.
 
 ## 🎯 Target Audience
+
 **Who is this documentation for?**
+
 - [ ] New developers
 - [ ] Experienced developers
 - [ ] End users
@@ -56,6 +64,7 @@ A clear description of the documentation changes needed.
 - [ ] Other: [specify]
 
 ## 🌍 Language/Localization
+
 - [ ] English documentation
 - [ ] Vietnamese translation
 - [ ] Japanese translation
@@ -64,6 +73,7 @@ A clear description of the documentation changes needed.
 - [ ] Other language: [specify]
 
 ## 📱 Platform Specific
+
 - [ ] Web development
 - [ ] Mobile development
 - [ ] Backend development
@@ -72,6 +82,7 @@ A clear description of the documentation changes needed.
 - [ ] General usage
 
 ## 📖 Content Suggestions
+
 **Specific content to include:**
 
 ```markdown
@@ -79,14 +90,18 @@ A clear description of the documentation changes needed.
 ```
 
 ## 🔗 References
+
 **Links to relevant resources:**
+
 - API docs: [link]
 - Code examples: [link]
 - Related issues: [link]
 - External resources: [link]
 
 ## 📸 Visual Elements
+
 **Should this documentation include:**
+
 - [ ] Screenshots
 - [ ] Diagrams
 - [ ] Code examples
@@ -96,6 +111,7 @@ A clear description of the documentation changes needed.
 - [ ] Architecture diagrams
 
 ## ✅ Checklist for Completion
+
 - [ ] Content written
 - [ ] Code examples tested
 - [ ] Screenshots updated
@@ -105,13 +121,16 @@ A clear description of the documentation changes needed.
 - [ ] Integration with existing docs
 
 ## 📈 Priority
+
 - [ ] 🔴 Critical (blocks development)
 - [ ] 🟠 High (important for users)
 - [ ] 🟡 Medium (helpful improvement)
 - [ ] 🟢 Low (minor enhancement)
 
 ## 📋 Additional Context
+
 Any other information about the documentation request.
 
 ## 🏷️ Labels
+
 documentation, needs-triage, [language], [component]

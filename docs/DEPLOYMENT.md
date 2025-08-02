@@ -7,6 +7,7 @@ Smart Cooking AI supports multiple deployment strategies from local development 
 ## 🏠 Local Development Deployment
 
 ### 📋 Prerequisites
+
 ```bash
 # Required software versions
 - Node.js 18+ và npm 9+
@@ -18,6 +19,7 @@ Smart Cooking AI supports multiple deployment strategies from local development 
 ```
 
 ### 🚀 Quick Start
+
 ```bash
 # 1. Clone repository
 git clone https://github.com/yourusername/SmartCookingAI_2.git
@@ -38,6 +40,7 @@ docker-compose up -d
 ```
 
 ### 🐳 Individual Service Development
+
 ```bash
 # Backend (Spring Boot)
 cd backend
@@ -68,6 +71,7 @@ flutter run
 ### 🔵 Azure Deployment (Recommended)
 
 #### 📦 Azure Container Apps
+
 ```yaml
 # azure-container-apps.yml
 apiVersion: v2
@@ -83,7 +87,7 @@ services:
       - DATABASE_URL: ${AZURE_MYSQL_URL}
       - REDIS_URL: ${AZURE_REDIS_URL}
     replicas: 3
-    
+
   ai-service:
     image: smartcookingai/ai-service:latest
     port: 8001
@@ -91,7 +95,7 @@ services:
       - OPENAI_API_KEY: ${OPENAI_API_KEY}
       - GEMINI_API_KEY: ${GEMINI_API_KEY}
     replicas: 2
-    
+
   frontend:
     image: smartcookingai/frontend:latest
     port: 3000
@@ -101,6 +105,7 @@ services:
 ```
 
 #### 🗄️ Azure Database Setup
+
 ```bash
 # Create Azure MySQL Flexible Server
 az mysql flexible-server create \
@@ -126,6 +131,7 @@ az redis create \
 ### 🟠 AWS Deployment
 
 #### 🚢 ECS with Fargate
+
 ```json
 {
   "family": "smart-cooking-ai",
@@ -155,6 +161,7 @@ az redis create \
 ```
 
 #### 🗄️ AWS RDS & ElastiCache
+
 ```bash
 # Create RDS MySQL instance
 aws rds create-db-instance \
@@ -177,6 +184,7 @@ aws elasticache create-cache-cluster \
 ### 🟢 Google Cloud Platform (GCP)
 
 #### ☸️ Google Kubernetes Engine (GKE)
+
 ```yaml
 # kubernetes/deployment.yml
 apiVersion: apps/v1
@@ -194,16 +202,16 @@ spec:
         app: smart-cooking-backend
     spec:
       containers:
-      - name: backend
-        image: gcr.io/smart-cooking-ai/backend:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: url
+        - name: backend
+          image: gcr.io/smart-cooking-ai/backend:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: url
 ---
 apiVersion: v1
 kind: Service
@@ -213,15 +221,16 @@ spec:
   selector:
     app: smart-cooking-backend
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8080
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
   type: LoadBalancer
 ```
 
 ## 🐳 Docker Production Setup
 
 ### 📦 Multi-stage Docker Builds
+
 ```dockerfile
 # backend/Dockerfile.prod
 FROM maven:3.8-openjdk-17 AS builder
@@ -263,9 +272,10 @@ CMD ["npm", "start"]
 ```
 
 ### 🔧 Production Docker Compose
+
 ```yaml
 # docker-compose.prod.yml
-version: '3.8'
+version: "3.8"
 
 services:
   nginx:
@@ -333,10 +343,11 @@ volumes:
 ## 🌐 CDN & Static Assets
 
 ### 📦 Firebase Storage Setup
+
 ```typescript
 // firebase-config.ts
-import { initializeApp } from 'firebase/app';
-import { getStorage } from 'firebase/storage';
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -344,7 +355,7 @@ const firebaseConfig = {
   projectId: "smartcooking-ai",
   storageBucket: "smartcooking-ai.appspot.com",
   messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef123456"
+  appId: "1:123456789:web:abcdef123456",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -352,6 +363,7 @@ export const storage = getStorage(app);
 ```
 
 ### 🚀 CloudFront Distribution
+
 ```json
 {
   "DistributionConfig": {
@@ -382,6 +394,7 @@ export const storage = getStorage(app);
 ## 🔒 SSL/TLS Configuration
 
 ### 📜 Let's Encrypt Setup
+
 ```bash
 # Install Certbot
 sudo apt install certbot python3-certbot-nginx
@@ -395,19 +408,20 @@ sudo crontab -e
 ```
 
 ### 🌐 Nginx SSL Configuration
+
 ```nginx
 # nginx/ssl.conf
 server {
     listen 443 ssl http2;
     server_name smartcookingai.com www.smartcookingai.com;
-    
+
     ssl_certificate /etc/letsencrypt/live/smartcookingai.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/smartcookingai.com/privkey.pem;
-    
+
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512;
     ssl_prefer_server_ciphers off;
-    
+
     location / {
         proxy_pass http://frontend:3000;
         proxy_set_header Host $host;
@@ -415,7 +429,7 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
-    
+
     location /api/ {
         proxy_pass http://backend:8080;
         proxy_set_header Host $host;
@@ -429,9 +443,10 @@ server {
 ## 📊 Monitoring & Logging
 
 ### 📈 Prometheus + Grafana
+
 ```yaml
 # monitoring/docker-compose.yml
-version: '3.8'
+version: "3.8"
 
 services:
   prometheus:
@@ -440,7 +455,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    
+
   grafana:
     image: grafana/grafana:latest
     ports:
@@ -457,9 +472,10 @@ volumes:
 ```
 
 ### 📋 ELK Stack Logging
+
 ```yaml
 # logging/docker-compose.yml
-version: '3.8'
+version: "3.8"
 
 services:
   elasticsearch:
@@ -469,7 +485,7 @@ services:
       - xpack.security.enabled=false
     ports:
       - "9200:9200"
-    
+
   logstash:
     image: docker.elastic.co/logstash/logstash:8.5.0
     volumes:
@@ -479,7 +495,7 @@ services:
       - "5044:5044"
     depends_on:
       - elasticsearch
-    
+
   kibana:
     image: docker.elastic.co/kibana/kibana:8.5.0
     ports:
@@ -493,6 +509,7 @@ services:
 ## 🚀 CI/CD Pipeline
 
 ### 🔄 GitHub Actions Workflow
+
 ```yaml
 # .github/workflows/deploy.yml
 name: Deploy to Production
@@ -508,29 +525,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          
+          node-version: "18"
+
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          
+          java-version: "17"
+          distribution: "temurin"
+
       - name: Run Backend Tests
         run: |
           cd backend
           ./mvnw test
-          
+
       - name: Run Frontend Tests
         run: |
           cd frontend-nextjs
           npm ci
           npm run test
-          
+
       - name: Run AI Service Tests
         run: |
           cd ai-service
@@ -541,33 +558,34 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Build Docker Images
         run: |
           docker build -t smartcookingai/backend:${{ github.sha }} ./backend
           docker build -t smartcookingai/frontend:${{ github.sha }} ./frontend-nextjs
           docker build -t smartcookingai/ai-service:${{ github.sha }} ./ai-service
-          
+
       - name: Push to Registry
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
           docker push smartcookingai/backend:${{ github.sha }}
           docker push smartcookingai/frontend:${{ github.sha }}
           docker push smartcookingai/ai-service:${{ github.sha }}
-          
+
       - name: Deploy to Production
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'smart-cooking-ai'
+          app-name: "smart-cooking-ai"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
 ```
 
 ## 📱 Mobile App Deployment
 
 ### 🤖 Android Play Store
+
 ```bash
 # Build signed APK
 cd mobile-app
@@ -581,6 +599,7 @@ flutter build appbundle --release
 ```
 
 ### 🍎 iOS App Store
+
 ```bash
 # Build for iOS
 cd mobile-app
@@ -591,6 +610,7 @@ flutter build ios --release
 ```
 
 ### 🔄 Fastlane Setup
+
 ```ruby
 # mobile-app/fastlane/Fastfile
 default_platform(:android)
@@ -618,6 +638,7 @@ end
 ## 🔧 Environment Configuration
 
 ### 🌍 Environment Variables
+
 ```bash
 # Production environment variables
 DATABASE_URL=jdbc:mysql://prod-db:3306/smartcooking
@@ -632,6 +653,7 @@ NEXT_PUBLIC_API_URL=https://api.smartcookingai.com
 ```
 
 ### 🔒 Secrets Management
+
 ```yaml
 # Kubernetes secrets
 apiVersion: v1
@@ -648,6 +670,7 @@ data:
 ## 📋 Pre-deployment Checklist
 
 ### ✅ Security Checklist
+
 - [ ] All API keys in environment variables
 - [ ] SSL certificates configured
 - [ ] CORS properly configured
@@ -657,6 +680,7 @@ data:
 - [ ] XSS protection enabled
 
 ### ✅ Performance Checklist
+
 - [ ] Database indexes optimized
 - [ ] Redis caching configured
 - [ ] CDN for static assets
@@ -666,6 +690,7 @@ data:
 - [ ] Monitoring setup
 
 ### ✅ Reliability Checklist
+
 - [ ] Health checks configured
 - [ ] Auto-scaling rules
 - [ ] Backup strategy implemented
@@ -679,6 +704,7 @@ data:
 ### 🐛 Common Issues
 
 #### Database Connection Issues
+
 ```bash
 # Check database connectivity
 docker exec -it mysql_container mysql -u root -p
@@ -688,6 +714,7 @@ SHOW TABLES;
 ```
 
 #### Memory Issues
+
 ```bash
 # Monitor container resources
 docker stats
@@ -697,6 +724,7 @@ export JAVA_OPTS="-Xms512m -Xmx2g"
 ```
 
 #### SSL Certificate Issues
+
 ```bash
 # Check certificate validity
 openssl x509 -in /etc/letsencrypt/live/domain/cert.pem -text -noout
@@ -706,8 +734,9 @@ sudo certbot renew --dry-run
 ```
 
 ### 📞 Support Contacts
+
 - **Technical Support**: tech@smartcookingai.com
-- **Infrastructure**: devops@smartcookingai.com  
+- **Infrastructure**: devops@smartcookingai.com
 - **Security Issues**: security@smartcookingai.com
 
 ---

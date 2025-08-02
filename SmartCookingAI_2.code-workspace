@@ -17,10 +17,14 @@
 		},
 		{
 			"path": "mobile-app"
+		},
+		{
+			"path": "frontend-clean"
 		}
 	],
 	"settings": {
 		"java.compile.nullAnalysis.mode": "automatic",
-		"powershell.cwd": "mobile-app"
+		"powershell.cwd": "mobile-app",
+		"java.configuration.updateBuildConfiguration": "interactive"
 	}
 }

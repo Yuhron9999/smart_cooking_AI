@@ -1,9 +1,11 @@
 # 📋 Sample Issues để tạo trên GitHub
 
 ## 🐛 Bug Report Sample
+
 **Title:** [BUG] Mobile app crashes when switching languages in settings
 
 **Body:**
+
 ```
 ## 🐛 Bug Description
 The mobile app crashes immediately when user tries to change language from Vietnamese to English in the settings screen.
@@ -40,9 +42,11 @@ App crashes with white screen and returns to home screen.
 ```
 
 ## ✨ Feature Request Sample
+
 **Title:** [FEATURE] Add voice-guided cooking instructions
 
 **Body:**
+
 ```
 ## ✨ Feature Summary
 Add voice-guided step-by-step cooking instructions that users can activate during cooking.
@@ -88,15 +92,17 @@ Implement text-to-speech functionality that reads cooking instructions aloud, wi
 ```
 
 ## 📚 Documentation Sample
+
 **Title:** [DOCS] Add comprehensive API documentation for AI endpoints
 
 **Body:**
+
 ```
 ## 📚 Documentation Type
 - [x] 📖 New documentation
 - [x] 📊 API documentation
 
-## 📍 Location/Section  
+## 📍 Location/Section
 - [x] API documentation
 - [x] AI integration guides
 
@@ -107,7 +113,7 @@ Implement text-to-speech functionality that reads cooking instructions aloud, wi
 ## ✨ Proposed Changes
 Create comprehensive API documentation for all AI service endpoints including:
 - Recipe generation endpoints
-- Image recognition endpoints  
+- Image recognition endpoints
 - Voice processing endpoints
 - Chat/conversation endpoints
 

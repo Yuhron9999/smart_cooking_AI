@@ -25,6 +25,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     /**
+     * Find user by email
+     */
+    public Optional<User> findByEmail(String email) {
+        log.debug("Finding user by email: {}", email);
+        return userRepository.findByEmail(email);
+    }
+
+    /**
      * Tạo user mới
      */
     public User createUser(User user) {
@@ -90,14 +98,6 @@ public class UserService {
         User savedUser = userRepository.save(newUser);
         log.info("Created new OAuth2 user: {}", savedUser.getId());
         return savedUser;
-    }
-
-    /**
-     * Tìm user theo email
-     */
-    @Transactional(readOnly = true)
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
     }
 
     /**
@@ -279,6 +279,44 @@ public class UserService {
         userRepository.save(user);
 
         log.info("Password changed for user: {}", userId);
+    }
+
+    /**
+     * Get all users - Admin only
+     */
+    public List<User> getAllUsers() {
+        log.debug("Getting all users");
+        return userRepository.findAll();
+    }
+
+    /**
+     * Change user role - Admin only
+     */
+    public User changeUserRole(Long userId, User.Role newRole) {
+        log.info("Changing role for user ID {} to {}", userId, newRole);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        user.setRole(newRole);
+        User updatedUser = userRepository.save(user);
+
+        log.info("User role changed successfully for user ID: {}", userId);
+        return updatedUser;
+    }
+
+    /**
+     * Delete user - Admin only
+     */
+    public void deleteUser(Long userId) {
+        log.info("Deleting user with ID: {}", userId);
+
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("User not found with ID: " + userId);
+        }
+
+        userRepository.deleteById(userId);
+        log.info("User deleted successfully: {}", userId);
     }
 
     /**
