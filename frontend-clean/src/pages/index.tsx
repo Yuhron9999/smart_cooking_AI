@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-import { Button, FoodButton, GradientButton } from '@/components/ui/Button';
 import NumberDisplay from '@/components/common/NumberDisplay';
 
 // Animation Hook
@@ -30,13 +29,7 @@ const useScrollAnimation = () => {
     }, []);
 
     return visibleElements;
-};t Cooking AI - Homepage
-import React from 'react';
-import { NextPage, GetServerSideProps } from 'next';
-import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import { Button, FoodButton, GradientButton } from '@/components/ui/Button';
-import NumberDisplay from '@/components/common/NumberDisplay';
+};
 
 interface Recipe {
     id: number;
