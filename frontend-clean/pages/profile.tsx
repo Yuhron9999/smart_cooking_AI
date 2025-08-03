@@ -3,7 +3,7 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Header from '@/components/layout/Header_fixed';
-import styles from '@/styles/profile.module.css';
+import styles from '../styles/profile.module.css';
 import {
     User,
     Mail,
