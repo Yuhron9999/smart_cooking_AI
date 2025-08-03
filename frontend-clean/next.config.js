@@ -1,20 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false, // Tắt strict mode để tránh hydration errors
-  swcMinify: true,
-  
-  // Tắt SSR để tránh hydration mismatch hoàn toàn
-  experimental: { 
+
+  // Clean experimental config
+  experimental: {
     esmExternals: false,
-    // Force client-side rendering
-    runtime: 'edge',
   },
-  
+
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "lh3.googleusercontent.com", 
+        hostname: "lh3.googleusercontent.com",
         port: "",
         pathname: "/**",
       },
@@ -25,14 +22,14 @@ const nextConfig = {
         pathname: "/**",
       },
       {
-        protocol: "https", 
+        protocol: "https",
         hostname: "images.unsplash.com",
         port: "",
         pathname: "/**",
       },
     ],
   },
-  
+
   // Custom webpack config để optimize hydration
   webpack: (config, { dev, isServer }) => {
     // Disable SSR warnings
@@ -44,15 +41,14 @@ const nextConfig = {
         tls: false,
       };
     }
-    
+
     return config;
   },
-  
+
   // Environment variables untuk tắt warnings
   env: {
-    NEXT_PUBLIC_DISABLE_HYDRATION_WARNING: 'true',
+    NEXT_PUBLIC_DISABLE_HYDRATION_WARNING: "true",
   },
 };
-
 
 module.exports = nextConfig;

@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -33,14 +32,31 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
 
     const router = useRouter();
     const { data: session } = useSession();
-    const { t } = useTranslation('common');
+
+    // Fallback translations để tránh lỗi i18n context
+    const translations = {
+        'navigation.home': 'Trang Chủ',
+        'navigation.recipes': 'Công Thức',
+        'navigation.ai_chat': 'Trợ Lý AI',
+        'navigation.profile': 'Hồ Sơ',
+        'navigation.voice': 'Voice Chef',
+        'recipe.search_placeholder': 'Tìm công thức...',
+        'profile.title': 'Hồ Sơ',
+        'profile.favorite_recipes': 'Yêu Thích',
+        'profile.settings': 'Cài Đặt',
+        'auth.logout': 'Đăng Xuất',
+        'auth.login': 'Đăng Nhập',
+        'auth.register': 'Đăng Ký'
+    };
+
+    const t = (key: string) => translations[key as keyof typeof translations] || key;
 
     const navigation = [
         { name: t('navigation.home'), href: '/', icon: Home },
         { name: t('navigation.recipes'), href: '/recipes', icon: ChefHat },
         { name: t('navigation.ai_chat'), href: '/ai-chat', icon: Sparkles },
-        { name: t('navigation.profile'), href: '/profile', icon: User },
-        { name: t('navigation.voice'), href: '/voice', icon: Mic },
+        { name: 'Lộ Trình Học', href: '/learning-path', icon: User },
+        { name: t('navigation.voice'), href: '/voice-assistant', icon: Mic },
     ];
 
     const handleSearch = (e: React.FormEvent) => {
@@ -184,13 +200,13 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                             <div className="flex items-center space-x-2">
                                 <Button
                                     variant="ghost"
-                                    onClick={() => router.push('/auth/login')}
+                                    onClick={() => router.push('/auth/signin')}
                                 >
                                     {t('auth.login')}
                                 </Button>
                                 <Button
                                     variant="primary"
-                                    onClick={() => router.push('/auth/register')}
+                                    onClick={() => router.push('/auth/signin')}
                                 >
                                     {t('auth.register')}
                                 </Button>

@@ -1,6 +1,6 @@
 // Professional Header Component with Authentication  
 import React, { useState } from 'react';
-import { useSession, signOut, signIn } from 'next-auth/react';
+import { signOut, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -59,9 +59,9 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
     const navigation = [
         { name: t('navigation.home') || 'Home', href: '/', icon: Home },
         { name: t('navigation.recipes') || 'Recipes', href: '/recipes', icon: ChefHat },
-        { name: t('navigation.ai_chat') || 'AI Chat', href: '/ai-assistant', icon: Sparkles },
+        { name: t('navigation.ai_chat') || 'AI Chat', href: '/ai-chat', icon: Sparkles },
         { name: t('navigation.profile') || 'Profile', href: '/profile', icon: User },
-        { name: t('navigation.voice') || 'Voice', href: '/voice', icon: Mic },
+        { name: t('navigation.voice') || 'Voice', href: '/voice-assistant', icon: Mic },
     ];
 
     const handleSearch = (e: React.FormEvent) => {

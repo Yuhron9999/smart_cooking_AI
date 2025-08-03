@@ -27,8 +27,8 @@ const Header: React.FC = () => {
     const navigation = [
         { name: 'Trang Chủ', href: '/', icon: ChefHat },
         { name: 'Công Thức', href: '/recipes', icon: BookOpen },
-        { name: 'Học Nấu Ăn', href: '/learn', icon: BookOpen },
-        { name: 'Trợ Lý AI', href: '/ai-assistant', icon: Sparkles },
+        { name: 'Lộ Trình Học', href: '/learning-path', icon: BookOpen },
+        { name: 'Trợ Lý AI', href: '/ai-chat', icon: Sparkles },
         { name: 'Voice Chef', href: '/voice', icon: Mic },
     ];
 
@@ -142,6 +142,19 @@ const Header: React.FC = () => {
                                                         >
                                                             <User className="w-4 h-4 mr-3" />
                                                             Hồ Sơ Cá Nhân
+                                                        </Link>
+                                                    )}
+                                                </Menu.Item>
+
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <Link
+                                                            href="/favorites"
+                                                            className={`${active ? 'bg-orange-50 text-orange-600' : 'text-gray-700'} 
+                                flex items-center px-4 py-2 text-sm transition-colors`}
+                                                        >
+                                                            <BookOpen className="w-4 h-4 mr-3" />
+                                                            Yêu Thích
                                                         </Link>
                                                     )}
                                                 </Menu.Item>

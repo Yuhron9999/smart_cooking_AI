@@ -1,5 +1,5 @@
 // UI Components - Index file for easy imports
-export { Button, buttonVariants } from "./Button";
+export { Button } from "./Button";
 export { Input, inputVariants } from "./Input";
 export {
   Card,
@@ -8,8 +8,8 @@ export {
   CardTitle,
   CardDescription,
   CardContent,
-  RecipeCard,
-  cardVariants,
+  // RecipeCard,
+  // cardVariants,
 } from "./Card";
 export {
   Dialog,

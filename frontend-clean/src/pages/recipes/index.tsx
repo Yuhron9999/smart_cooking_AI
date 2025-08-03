@@ -5,7 +5,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Clock, Users, Star, ChefHat } from 'lucide-react';
-import Header from '@/components/layout/Header';
+import Header from '@/components/layout/Header2';
 
 interface Recipe {
     id: number;
