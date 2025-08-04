@@ -16,7 +16,9 @@ import {
     Mic,
     Globe,
     Heart,
-    Home
+    Home,
+    Book,
+    MessageCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -52,11 +54,12 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
     const t = (key: string) => translations[key as keyof typeof translations] || key;
 
     const navigation = [
-        { name: t('navigation.home'), href: '/', icon: Home },
-        { name: t('navigation.recipes'), href: '/recipes', icon: ChefHat },
-        { name: t('navigation.ai_chat'), href: '/ai-chat', icon: Sparkles },
-        { name: 'Lộ Trình Học', href: '/learning-path', icon: User },
-        { name: t('navigation.voice'), href: '/voice-assistant', icon: Mic },
+        { name: translations['navigation.home'], href: '/', icon: Home },
+        { name: translations['navigation.recipes'], href: '/recipes', icon: Book },
+        { name: translations['navigation.ai_chat'], href: '/ai-chat', icon: MessageCircle },
+        { name: translations['navigation.voice'], href: '/voice-assistant', icon: Mic },
+        { name: translations['navigation.profile'], href: '/profile', icon: User },
+        { name: '🧪 AI Test', href: '/simple-ai-test', icon: ChefHat }
     ];
 
     const handleSearch = (e: React.FormEvent) => {
