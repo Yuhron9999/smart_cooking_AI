@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Head from 'next/head';
 import Header from '@/components/layout/Header';
+immport 
+
 import {
     Settings as SettingsIcon,
     User,
@@ -101,58 +103,7 @@ const Settings: React.FC = () => {
     const [hasChanges, setHasChanges] = useState(false);
     const [showResetConfirm, setShowResetConfirm] = useState(false);
     const [exportingData, setExportingData] = useState(false);
-
-    // Default settings
-    const defaultSettings: SettingsData = useMemo((): SettingsData => ({
-        account: {
-            twoFactorEnabled: false,
-            emailVerified: true,
-            phoneVerified: false,
-            lastPasswordChange: '2024-01-01'
-        },
-        privacy: {
-            profileVisibility: 'public',
-            activityTracking: true,
-            dataCollection: true,
-            personalization: true,
-            analytics: true
-        },
-        notifications: {
-            email: {
-                newRecipes: true,
-                weeklyDigest: true,
-                recipeRecommendations: true,
-                systemUpdates: true,
-                securityAlerts: true
-            },
-            push: {
-                enabled: true,
-                newRecipes: true,
-                cookingReminders: true,
-                achievements: true,
-                socialActivity: false
-            },
-            sound: {
-                enabled: true,
-                volume: 70,
-                voiceAssistant: true
-            }
-        },
-        appearance: {
-            theme: 'system',
-            language: 'vi',
-            fontSize: 'medium',
-            animations: true,
-            compactMode: false
-        },
-        advanced: {
-            autoSave: true,
-            offlineMode: false,
-            debugMode: false,
-            experimentalFeatures: false,
-            dataSync: true
-        }
-    }), []);
+    const [settingsLoaded, setSettingsLoaded] = useState(false);
 
     useEffect(() => {
         if (status === 'loading') return;
@@ -162,33 +113,140 @@ const Settings: React.FC = () => {
             return;
         }
 
-        // Simulate API call to load user settings
-        const loadSettings = async () => {
-            setLoading(true);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            setSettings(defaultSettings);
-            setLoading(false);
-        };
+        // Chỉ load settings một lần khi component mount
+        if (!settingsLoaded) {
+            const loadSettings = async () => {
+                setLoading(true);
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
-        loadSettings();
-    }, [session, status, defaultSettings]);
+                // Tạo object mới mà không reference đến defaultSettings
+                const initialSettings: SettingsData = {
+                    account: {
+                        twoFactorEnabled: false,
+                        emailVerified: true,
+                        phoneVerified: false,
+                        lastPasswordChange: '2024-01-01'
+                    },
+                    privacy: {
+                        profileVisibility: 'public',
+                        activityTracking: true,
+                        dataCollection: true,
+                        personalization: true,
+                        analytics: true
+                    },
+                    notifications: {
+                        email: {
+                            newRecipes: true,
+                            weeklyDigest: true,
+                            recipeRecommendations: true,
+                            systemUpdates: true,
+                            securityAlerts: true
+                        },
+                        push: {
+                            enabled: true,
+                            newRecipes: true,
+                            cookingReminders: true,
+                            achievements: true,
+                            socialActivity: false
+                        },
+                        sound: {
+                            enabled: true,
+                            volume: 70,
+                            voiceAssistant: true
+                        }
+                    },
+                    appearance: {
+                        theme: 'system',
+                        language: 'vi',
+                        fontSize: 'medium',
+                        animations: true,
+                        compactMode: false
+                    },
+                    advanced: {
+                        autoSave: true,
+                        offlineMode: false,
+                        debugMode: false,
+                        experimentalFeatures: false,
+                        dataSync: true
+                    }
+                };
 
-    const handleSaveSettings = async () => {
+                setSettings(initialSettings);
+                setSettingsLoaded(true);
+                setLoading(false);
+            };
+
+            loadSettings();
+        }
+    }, [session, status, settingsLoaded]); // Added settingsLoaded dependency
+
+    const handleSaveSettings = useCallback(async () => {
         if (!settings) return;
 
         setSaving(true);
         await new Promise(resolve => setTimeout(resolve, 1500));
         setHasChanges(false);
         setSaving(false);
-    };
+    }, [settings]);
 
-    const handleResetSettings = async () => {
-        setSettings(defaultSettings);
+    const handleResetSettings = useCallback(async () => {
+        // Tạo object mới mà không reference đến defaultSettings
+        const freshSettings: SettingsData = {
+            account: {
+                twoFactorEnabled: false,
+                emailVerified: true,
+                phoneVerified: false,
+                lastPasswordChange: '2024-01-01'
+            },
+            privacy: {
+                profileVisibility: 'public',
+                activityTracking: true,
+                dataCollection: true,
+                personalization: true,
+                analytics: true
+            },
+            notifications: {
+                email: {
+                    newRecipes: true,
+                    weeklyDigest: true,
+                    recipeRecommendations: true,
+                    systemUpdates: true,
+                    securityAlerts: true
+                },
+                push: {
+                    enabled: true,
+                    newRecipes: true,
+                    cookingReminders: true,
+                    achievements: true,
+                    socialActivity: false
+                },
+                sound: {
+                    enabled: true,
+                    volume: 70,
+                    voiceAssistant: true
+                }
+            },
+            appearance: {
+                theme: 'system',
+                language: 'vi',
+                fontSize: 'medium',
+                animations: true,
+                compactMode: false
+            },
+            advanced: {
+                autoSave: true,
+                offlineMode: false,
+                debugMode: false,
+                experimentalFeatures: false,
+                dataSync: true
+            }
+        };
+        setSettings(freshSettings);
         setHasChanges(true);
         setShowResetConfirm(false);
-    };
+    }, []); // No dependencies
 
-    const handleExportData = async () => {
+    const handleExportData = useCallback(async () => {
         setExportingData(true);
         await new Promise(resolve => setTimeout(resolve, 2000));
 
@@ -208,9 +266,9 @@ const Settings: React.FC = () => {
         URL.revokeObjectURL(url);
 
         setExportingData(false);
-    };
+    }, [session, settings]);
 
-    const updateSettings = (path: string, value: boolean | string | number) => {
+    const updateSettings = useCallback((path: string, value: boolean | string | number) => {
         if (!settings) return;
 
         const pathArray = path.split('.');
@@ -218,13 +276,14 @@ const Settings: React.FC = () => {
         let current: Record<string, unknown> = newSettings;
 
         for (let i = 0; i < pathArray.length - 1; i++) {
+            current[pathArray[i]] = { ...(current[pathArray[i]] as Record<string, unknown>) };
             current = current[pathArray[i]] as Record<string, unknown>;
         }
 
         current[pathArray[pathArray.length - 1]] = value;
         setSettings(newSettings);
         setHasChanges(true);
-    };
+    }, [settings]);
 
     const sections = [
         { id: 'account', label: 'Tài khoản', icon: User },
@@ -235,14 +294,7 @@ const Settings: React.FC = () => {
     ];
 
     if (status === 'loading' || loading) {
-        return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Đang tải cài đặt...</p>
-                </div>
-            </div>
-        );
+        return <LoadingState message="Đang tải cài đặt..." showDetails={true} />;
     }
 
     if (!session) {

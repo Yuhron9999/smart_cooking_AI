@@ -18,7 +18,8 @@ export const notificationService = {
    */
   getAll: async (): Promise<Notification[]> => {
     try {
-      const response = await backendApi.get<Notification[]>("/api/notifications");
+      const response =
+        await backendApi.get<Notification[]>("/api/notifications");
       return response;
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -33,7 +34,9 @@ export const notificationService = {
     id: string
   ): Promise<ApiResponse<{ success: boolean }>> => {
     try {
-      const response = await backendApi.post<ApiResponse<{ success: boolean }>>(`/api/notifications/${id}/read`);
+      const response = await backendApi.post<ApiResponse<{ success: boolean }>>(
+        `/api/notifications/${id}/read`
+      );
       return response;
     } catch (error) {
       console.error(`Error marking notification ${id} as read:`, error);
@@ -48,7 +51,9 @@ export const notificationService = {
     ApiResponse<{ success: boolean; count: number }>
   > => {
     try {
-      const response = await backendApi.post<ApiResponse<{ success: boolean; count: number }>>("/api/notifications/mark-all-read");
+      const response = await backendApi.post<
+        ApiResponse<{ success: boolean; count: number }>
+      >("/api/notifications/mark-all-read");
       return response;
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
@@ -63,9 +68,9 @@ export const notificationService = {
     id: string
   ): Promise<ApiResponse<{ success: boolean; isImportant: boolean }>> => {
     try {
-      const response = await backendApi.post<ApiResponse<{ success: boolean; isImportant: boolean }>>(
-        `/api/notifications/${id}/toggle-important`
-      );
+      const response = await backendApi.post<
+        ApiResponse<{ success: boolean; isImportant: boolean }>
+      >(`/api/notifications/${id}/toggle-important`);
       return response;
     } catch (error) {
       console.error(`Error toggling importance for notification ${id}:`, error);
@@ -78,7 +83,9 @@ export const notificationService = {
    */
   delete: async (id: string): Promise<ApiResponse<{ success: boolean }>> => {
     try {
-      const response = await backendApi.delete<ApiResponse<{ success: boolean }>>(`/api/notifications/${id}`);
+      const response = await backendApi.delete<
+        ApiResponse<{ success: boolean }>
+      >(`/api/notifications/${id}`);
       return response;
     } catch (error) {
       console.error(`Error deleting notification ${id}:`, error);
@@ -91,7 +98,9 @@ export const notificationService = {
    */
   getUnreadCount: async (): Promise<number> => {
     try {
-      const response = await backendApi.get<{ count: number }>("/api/notifications/unread-count");
+      const response = await backendApi.get<{ count: number }>(
+        "/api/notifications/unread-count"
+      );
       return response.count;
     } catch (error) {
       console.error("Error fetching unread notifications count:", error);
@@ -104,7 +113,9 @@ export const notificationService = {
    */
   getSettings: async (): Promise<ApiResponse<NotificationSettings>> => {
     try {
-      const response = await backendApi.get<ApiResponse<NotificationSettings>>("/api/user/notification-settings");
+      const response = await backendApi.get<ApiResponse<NotificationSettings>>(
+        "/api/user/notification-settings"
+      );
       return response;
     } catch (error) {
       console.error("Error fetching notification settings:", error);

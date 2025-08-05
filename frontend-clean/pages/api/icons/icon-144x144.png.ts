@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // SVG content cho icon 144x144
@@ -8,7 +8,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     <text x="72" y="120" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Smart Cook</text>
   </svg>`;
 
-  res.setHeader('Content-Type', 'image/svg+xml');
-  res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 1 day
+  res.setHeader("Content-Type", "image/svg+xml");
+  res.setHeader("Cache-Control", "public, max-age=86400"); // Cache for 1 day
   res.status(200).send(svgContent);
 }

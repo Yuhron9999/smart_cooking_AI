@@ -105,7 +105,11 @@ export const useNotifications = () => {
         setNotifications((prevNotifications) =>
           prevNotifications.map((notification) =>
             notification.id === id
-              ? { ...notification, isImportant: response.data?.isImportant ?? !notification.isImportant }
+              ? {
+                  ...notification,
+                  isImportant:
+                    response.data?.isImportant ?? !notification.isImportant,
+                }
               : notification
           )
         );

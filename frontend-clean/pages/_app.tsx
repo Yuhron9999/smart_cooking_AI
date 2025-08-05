@@ -22,6 +22,7 @@ export default function App({
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="manifest" href="/manifest.json" />
                 <link rel="icon" href="/icons/icon.svg" />
+                <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
                 <title>Smart Cooking AI - Nấu ăn thông minh với AI</title>
             </Head>
             <AuthWrapper>
