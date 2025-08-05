@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Head from 'next/head';
-import Header from '@/components/layout/Header_fixed';
+import Header from '@/components/layout/Header';
 import {
     Settings as SettingsIcon,
     User,

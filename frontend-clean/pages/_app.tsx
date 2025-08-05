@@ -1,19 +1,34 @@
-import type { AppProps } from 'next/app';
-import { SessionProvider } from 'next-auth/react';
-import { Inter } from 'next/font/google';
-import '../src/styles/globals.css';
+import type { AppProps } from 'next/app'
+import { SessionProvider } from 'next-auth/react'
+import { Session } from 'next-auth'
+import '../styles/globals.css'
+import Head from 'next/head'
+import AuthWrapper from '../components/AuthWrapper'
 
-const inter = Inter({ subsets: ['latin'] });
+interface CustomAppProps extends AppProps {
+    pageProps: {
+        session?: Session;
+        [key: string]: any;
+    };
+}
 
 export default function App({
     Component,
-    pageProps: { session, ...pageProps }
-}: AppProps) {
+    pageProps: { session, ...pageProps },
+}: CustomAppProps) {
     return (
-        <div className={inter.className}>
-            <SessionProvider session={session}>
-                <Component {...pageProps} />
-            </SessionProvider>
-        </div>
-    );
+        <>
+            <Head>
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <link rel="manifest" href="/manifest.json" />
+                <link rel="icon" href="/icons/icon.svg" />
+                <title>Smart Cooking AI - Nấu ăn thông minh với AI</title>
+            </Head>
+            <AuthWrapper>
+                <SessionProvider session={session}>
+                    <Component {...pageProps} />
+                </SessionProvider>
+            </AuthWrapper>
+        </>
+    )
 }

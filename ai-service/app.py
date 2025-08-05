@@ -36,6 +36,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "your_gemini_api_key_here")  # Repl
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "your_google_api_key_here")  # Replace with your API key
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "your_google_maps_api_key_here")  # Replace with your API key
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID", "your_google_cse_id_here")  # Google Custom Search Engine ID
 
 # Initialize services - Ưu tiên Gemini
 if GEMINI_AVAILABLE and GEMINI_API_KEY:
@@ -91,6 +92,17 @@ class PlacesRequest(BaseModel):
     longitude: float = Field(..., description="User longitude")
     query: str = Field(..., description="Search query")
     radius: int = Field(default=2000, description="Search radius in meters")
+
+class ImageSearchRequest(BaseModel):
+    dish_name: str = Field(..., description="Name of the dish to search for")
+    max_results: int = Field(default=5, description="Number of images to return")
+    language: str = Field(default="vi", description="Search language")
+
+class FoodImageRequest(BaseModel):
+    dish_name: str = Field(..., description="Name of the dish")
+    description: Optional[str] = Field(default="", description="Description of the dish")
+    ingredients: Optional[List[str]] = Field(default=None, description="List of ingredients")
+    language: str = Field(default="vi", description="Language preference")
 
 # AI Service Class
 class AIService:
@@ -322,6 +334,254 @@ class AIService:
                 "model": "error",
                 "language": language
             }
+
+    async def search_food_images(self, query: str, num_results: int = 5, language: str = "vi") -> Dict[str, Any]:
+        """Search for food images using Google Custom Search API with intelligent fallback"""
+        
+        # First try Google Custom Search if configured
+        if GOOGLE_API_KEY and GOOGLE_CSE_ID and GOOGLE_CSE_ID != "YOUR_CUSTOM_SEARCH_ENGINE_ID":
+            try:
+                # Enhance search query for better food images
+                food_keywords = {
+                    'vi': f"{query} món ăn thức ăn food dish vietnamese",
+                    'en': f"{query} food dish meal cooking recipe"
+                }
+                
+                search_query = food_keywords.get(language, food_keywords['vi'])
+                
+                async with httpx.AsyncClient() as client:
+                    url = "https://www.googleapis.com/customsearch/v1"
+                    params = {
+                        "key": GOOGLE_API_KEY,
+                        "cx": GOOGLE_CSE_ID,
+                        "q": search_query,
+                        "searchType": "image",
+                        "num": min(num_results, 10),  # Google API max 10
+                        "imgSize": "medium",
+                        "imgType": "photo",
+                        "safe": "active",
+                        "lr": f"lang_{language}",
+                        "fileType": "jpg,png,jpeg"
+                    }
+                    
+                    response = await client.get(url, params=params)
+                    data = response.json()
+                    
+                    if response.status_code == 200 and "items" in data:
+                        images = []
+                        for item in data["items"]:
+                            images.append({
+                                "url": item.get("link"),
+                                "title": item.get("title", ""),
+                                "snippet": item.get("snippet", ""),
+                                "thumbnail": item.get("image", {}).get("thumbnailLink", ""),
+                                "width": item.get("image", {}).get("width", 400),
+                                "height": item.get("image", {}).get("height", 300)
+                            })
+                        
+                        return {
+                            "success": True,
+                            "data": {
+                                "images": images,
+                                "query": query,
+                                "total_results": len(images),
+                                "source": "google_custom_search"
+                            }
+                        }
+                    else:
+                        print(f"Google Search API error: {data.get('error', {}).get('message', 'Unknown error')}")
+            except Exception as e:
+                print(f"Google Custom Search failed: {e}")
+        
+        # Fallback to smart Unsplash URLs based on Vietnamese dish names
+        fallback_images = self._get_fallback_food_images(query, num_results)
+        
+        return {
+            "success": True,
+            "data": {
+                "images": fallback_images,
+                "query": query,
+                "total_results": len(fallback_images),
+                "source": "fallback_curated"
+            }
+        }
+
+    def _get_fallback_food_images(self, query: str, num_results: int = 5) -> List[Dict[str, Any]]:
+        """Get curated food images as fallback"""
+        
+        # Vietnamese food image mapping
+        food_images = {
+            'phở': [
+                'https://images.unsplash.com/photo-1555126634-323283e090fa?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1585032226651-759b368d7be1?w=400&h=300&fit=crop'
+            ],
+            'bánh': [
+                'https://images.unsplash.com/photo-1551782450-17144efb9c50?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1587573089020-e66fdc8ce07c?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop'
+            ],
+            'bún': [
+                'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1585032226651-759b368d7be1?w=400&h=300&fit=crop'
+            ],
+            'cơm': [
+                'https://images.unsplash.com/photo-1512058454905-6b841e7ad132?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1563379091339-03246963d999?w=400&h=300&fit=crop'
+            ],
+            'canh': [
+                'https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=300&fit=crop'
+            ],
+            'default': [
+                'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1512058454905-6b841e7ad132?w=400&h=300&fit=crop'
+            ]
+        }
+        
+        # Find best match
+        query_lower = query.lower()
+        selected_images = food_images['default']
+        
+        for key, images in food_images.items():
+            if key in query_lower:
+                selected_images = images
+                break
+        
+        # Return requested number of results
+        results = []
+        for i, url in enumerate(selected_images[:num_results]):
+            results.append({
+                "url": url,
+                "title": f"{query} - Food Image {i+1}",
+                "snippet": f"Curated food image for {query}",
+                "thumbnail": url.replace('w=400&h=300', 'w=150&h=150'),
+                "width": 400,
+                "height": 300
+            })
+        
+        return results
+
+    async def generate_smart_food_image(self, dish_name: str, description: str = "", ingredients: Optional[List[str]] = None, language: str = "vi") -> Dict[str, Any]:
+        """Generate smart food image with AI-enhanced matching"""
+        
+        # Enhanced Vietnamese food image database with specific dishes
+        vietnamese_food_images = {
+            # Phở variations
+            'phở bò': 'https://images.unsplash.com/photo-1555126634-323283e090fa?w=400&h=300&fit=crop&q=80',
+            'phở gà': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&q=80',
+            'phở hà nội': 'https://images.unsplash.com/photo-1585032226651-759b368d7be1?w=400&h=300&fit=crop&q=80',
+            
+            # Bánh variations
+            'bánh xèo': 'https://images.unsplash.com/photo-1551782450-17144efb9c50?w=400&h=300&fit=crop&q=80',
+            'bánh mì': 'https://images.unsplash.com/photo-1553909489-cd47e0ef937f?w=400&h=300&fit=crop&q=80',
+            'bánh cuốn': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&q=80',
+            'bánh chưng': 'https://images.unsplash.com/photo-1587573089020-e66fdc8ce07c?w=400&h=300&fit=crop&q=80',
+            
+            # Bún variations
+            'bún chả': 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop&q=80',
+            'bún bò huế': 'https://images.unsplash.com/photo-1576013551627-0cc20b96c156?w=400&h=300&fit=crop&q=80',
+            'bún riêu': 'https://images.unsplash.com/photo-1585032226651-759b368d7be1?w=400&h=300&fit=crop&q=80',
+            'bún thịt nướng': 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop&q=80',
+            
+            # Cơm variations
+            'cơm tấm': 'https://images.unsplash.com/photo-1512058454905-6b841e7ad132?w=400&h=300&fit=crop&q=80',
+            'cơm gà': 'https://images.unsplash.com/photo-1562967914-608f82629710?w=400&h=300&fit=crop&q=80',
+            'cơm chiên': 'https://images.unsplash.com/photo-1512058454905-6b841e7ad132?w=400&h=300&fit=crop&q=80',
+            
+            # Specific dishes
+            'gỏi cuốn': 'https://images.unsplash.com/photo-1539136788836-5699e78bfc75?w=400&h=300&fit=crop&q=80',
+            'nem nướng': 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=300&fit=crop&q=80',
+            'chả cá': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=300&fit=crop&q=80',
+            'canh chua': 'https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=300&fit=crop&q=80',
+            'thịt kho': 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=300&fit=crop&q=80',
+            'mì quảng': 'https://images.unsplash.com/photo-1585032226651-759b368d7be1?w=400&h=300&fit=crop&q=80',
+            'cao lầu': 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop&q=80',
+            'chè': 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop&q=80',
+        }
+        
+        # Try exact match first
+        dish_lower = dish_name.lower().strip()
+        
+        # Remove common prefixes for better matching
+        dish_clean = dish_lower.replace('món ', '').replace('công thức ', '')
+        
+        if dish_clean in vietnamese_food_images:
+            return {
+                "success": True,
+                "data": {
+                    "image_url": vietnamese_food_images[dish_clean],
+                    "source": "curated_database",
+                    "match_type": "exact"
+                }
+            }
+        
+        # Try partial matching with ingredients and description
+        best_match = None
+        match_score = 0
+        
+        for food_name, image_url in vietnamese_food_images.items():
+            score = 0
+            
+            # Check dish name similarity
+            if any(word in dish_lower for word in food_name.split()):
+                score += 50
+            
+            # Check description match
+            if description and any(word in description.lower() for word in food_name.split()):
+                score += 30
+            
+            # Check ingredients match
+            if ingredients:
+                ingredient_text = ' '.join(ingredients).lower()
+                if any(word in ingredient_text for word in food_name.split()):
+                    score += 20
+            
+            if score > match_score:
+                match_score = score
+                best_match = image_url
+        
+        if best_match and match_score > 30:  # Reasonable threshold
+            return {
+                "success": True,
+                "data": {
+                    "image_url": best_match,
+                    "source": "curated_database",
+                    "match_type": "intelligent",
+                    "confidence": match_score / 100
+                }
+            }
+        
+        # Fallback to category-based matching
+        category_images = {
+            'phở': 'https://images.unsplash.com/photo-1555126634-323283e090fa?w=400&h=300&fit=crop&q=80',
+            'bánh': 'https://images.unsplash.com/photo-1551782450-17144efb9c50?w=400&h=300&fit=crop&q=80',
+            'bún': 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop&q=80',
+            'cơm': 'https://images.unsplash.com/photo-1512058454905-6b841e7ad132?w=400&h=300&fit=crop&q=80',
+            'canh': 'https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=300&fit=crop&q=80',
+            'chè': 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop&q=80',
+        }
+        
+        for category, image_url in category_images.items():
+            if category in dish_lower:
+                return {
+                    "success": True,
+                    "data": {
+                        "image_url": image_url,
+                        "source": "category_match",
+                        "match_type": "category"
+                    }
+                }
+        
+        # Final fallback
+        return {
+            "success": True,
+            "data": {
+                "image_url": 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop&q=80',
+                "source": "default_fallback",
+                "match_type": "generic"
+            }
+        }
 
 # Initialize AI service
 ai_service = AIService()
@@ -874,6 +1134,44 @@ async def analyze_nutrition(request: dict):
         return {
             "success": False,
             "error": f"Không thể phân tích dinh dưỡng: {str(e)}"
+        }
+
+@app.post("/api/ai/generate-food-image")
+async def generate_food_image(request: FoodImageRequest):
+    """Generate or find appropriate food images with AI-enhanced matching"""
+    try:
+        # Enhanced image search with AI description
+        result = await ai_service.generate_smart_food_image(
+            dish_name=request.dish_name,
+            description=request.description or "",
+            ingredients=request.ingredients or [],
+            language=request.language
+        )
+        return result
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "error": f"Không thể tạo hình ảnh món ăn: {str(e)}",
+            "data": {"image_url": None}
+        }
+
+@app.post("/api/ai/search-food-images")
+async def search_food_images(request: ImageSearchRequest):
+    """Search for food images using Google Custom Search API"""
+    try:
+        result = await ai_service.search_food_images(
+            query=request.dish_name,
+            num_results=request.max_results,
+            language=request.language
+        )
+        return result
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "error": f"Không thể tìm kiếm hình ảnh: {str(e)}",
+            "data": {"images": []}
         }
 
 if __name__ == "__main__":

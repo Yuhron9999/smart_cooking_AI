@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
-import Header from '@/components/layout/Header_fixed';
+import Header from '@/components/layout/Header';
 import {
     Camera,
     Upload,

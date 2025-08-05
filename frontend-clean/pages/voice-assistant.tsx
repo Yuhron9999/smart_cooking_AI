@@ -1,427 +1,551 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { getSession } from 'next-auth/react';
-import Header from '@/components/layout/Header_fixed';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import {
+    ArrowLeft,
     Mic,
     MicOff,
     Volume2,
     VolumeX,
-    Play,
-    RotateCcw,
-    Languages,
-    Headphones
+    Square,
+    Settings,
+    Brain,
+    ChefHat,
+    Timer,
+    User,
+    Sparkles,
+    Headphones,
+    Radio,
+    Loader2
 } from 'lucide-react';
+import { aiAPI } from '../lib/api';
 
-interface VoiceSession {
+// Add SpeechRecognition type for TypeScript
+type SpeechRecognition = InstanceType<typeof window.webkitSpeechRecognition>;
+
+type VoiceState = 'idle' | 'listening' | 'processing' | 'speaking' | 'error';
+
+interface VoiceCommand {
     id: string;
-    transcript: string;
+    command: string;
     response: string;
     timestamp: Date;
-    duration: number;
+    processingTime?: number;
 }
 
 export default function VoiceAssistantPage() {
+    const { data: session, status } = useSession();
+    const router = useRouter();
+    const [voiceState, setVoiceState] = useState<VoiceState>('idle');
+    const [currentCommand, setCurrentCommand] = useState('');
+    const [currentResponse, setCurrentResponse] = useState('');
+    const [commandHistory, setCommandHistory] = useState<VoiceCommand[]>([]);
     const [isListening, setIsListening] = useState(false);
-    const [isProcessing, setIsProcessing] = useState(false);
     const [isSpeaking, setIsSpeaking] = useState(false);
-    const [currentTranscript, setCurrentTranscript] = useState('');
-    const [voiceSessions, setVoiceSessions] = useState<VoiceSession[]>([]);
-    const [selectedLanguage, setSelectedLanguage] = useState('vi-VN');
-    const [voiceVolume, setVoiceVolume] = useState(0.8);
-    const [speechRate] = useState(1.0);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const recognitionRef = useRef<any>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const synthRef = useRef<any>(null);
-
-    const languages = [
-        { code: 'vi-VN', name: 'Tiếng Việt', flag: '🇻🇳' },
-        { code: 'en-US', name: 'English (US)', flag: '🇺🇸' },
-        { code: 'ja-JP', name: '日本語', flag: '🇯🇵' },
-        { code: 'ko-KR', name: '한국어', flag: '🇰🇷' }
-    ];
+    const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+    const [synthesis, setSynthesis] = useState<SpeechSynthesis | null>(null);
+    const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
+    const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+    const [volume, setVolume] = useState(0.8);
+    const [speechRate, setSpeechRate] = useState(0.9);
+    const [language, setLanguage] = useState('vi-VN');
 
     const quickCommands = [
-        {
-            title: 'Tạo công thức từ nguyên liệu',
-            command: 'Tôi có thịt bò, cà chua, hành tây. Làm món gì được?',
-            example: 'Nói: "Tôi có thịt bò, cà chua, hành tây. Làm món gì được?"'
-        },
-        {
-            title: 'Hướng dẫn nấu món cụ thể',
-            command: 'Hướng dẫn tôi nấu phở bò',
-            example: 'Nói: "Hướng dẫn tôi nấu phở bò"'
-        },
-        {
-            title: 'Kiểm tra dinh dưỡng',
-            command: 'Phân tích dinh dưỡng của món gà nướng',
-            example: 'Nói: "Phân tích dinh dưỡng của món gà nướng"'
-        },
-        {
-            title: 'Thay thế nguyên liệu',
-            command: 'Thay thế đường bằng gì trong công thức bánh?',
-            example: 'Nói: "Thay thế đường bằng gì trong công thức bánh?"'
-        }
+        'Tạo công thức phở bò',
+        'Món ăn từ tôm và rau cải',
+        'Cách làm bánh mì',
+        'Món chay cho bữa tối',
+        'Thời gian nấu cơm',
+        'Nguyên liệu làm bánh flan'
     ];
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            // Initialize Speech Recognition
-            const SpeechRecognition = (window as Window & typeof globalThis).SpeechRecognition || (window as Window & typeof globalThis).webkitSpeechRecognition;
-            if (SpeechRecognition) {
-                recognitionRef.current = new SpeechRecognition();
-                recognitionRef.current.continuous = true;
-                recognitionRef.current.interimResults = true;
-                recognitionRef.current.lang = selectedLanguage;
-
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                recognitionRef.current.onresult = (event: any) => {
-                    let transcript = '';
-                    for (let i = event.resultIndex; i < event.results.length; ++i) {
-                        transcript += event.results[i][0].transcript;
-                    }
-                    setCurrentTranscript(transcript);
-                };
-
-                recognitionRef.current.onend = () => {
-                    if (isListening) {
-                        processVoiceCommand();
-                    }
-                };
-
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                recognitionRef.current.onerror = (event: any) => {
-                    console.error('Speech recognition error:', event.error);
-                    setIsListening(false);
-                    setIsProcessing(false);
-                };
-            }
-
-            // Initialize Speech Synthesis
-            synthRef.current = window.speechSynthesis;
+        if (status === 'unauthenticated') {
+            router.push('/auth');
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedLanguage]);
+    }, [status, router]);
+
+    useEffect(() => {
+        // Initialize speech recognition
+        if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+            const speechRecognition = new (window as any).webkitSpeechRecognition();
+            speechRecognition.continuous = false;
+            speechRecognition.interimResults = true;
+            speechRecognition.lang = language;
+
+            speechRecognition.onstart = () => {
+                setVoiceState('listening');
+                setIsListening(true);
+            };
+
+            speechRecognition.onresult = (event: any) => {
+                const transcript = event.results[0][0].transcript;
+                setCurrentCommand(transcript);
+                
+                if (event.results[0].isFinal) {
+                    handleVoiceCommand(transcript);
+                }
+            };
+
+            speechRecognition.onerror = (event: any) => {
+                console.error('Speech recognition error:', event.error);
+                setVoiceState('error');
+                setIsListening(false);
+            };
+
+            speechRecognition.onend = () => {
+                setIsListening(false);
+                if (voiceState === 'listening') {
+                    setVoiceState('idle');
+                }
+            };
+
+            setRecognition(speechRecognition);
+        }
+
+        // Initialize speech synthesis
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+            setSynthesis(window.speechSynthesis);
+            
+            const loadVoices = () => {
+                const availableVoices = window.speechSynthesis.getVoices();
+                setVoices(availableVoices);
+                
+                // Find Vietnamese voice
+                const vietnameseVoice = availableVoices.find(voice => 
+                    voice.lang.includes('vi') || voice.name.includes('Vietnamese')
+                );
+                
+                if (vietnameseVoice) {
+                    setSelectedVoice(vietnameseVoice);
+                } else {
+                    setSelectedVoice(availableVoices[0]);
+                }
+            };
+
+            loadVoices();
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+    }, [language, voiceState]);
 
     const startListening = () => {
-        if (recognitionRef.current) {
-            setIsListening(true);
-            setCurrentTranscript('');
-            recognitionRef.current.start();
+        if (recognition && !isListening) {
+            setCurrentCommand('');
+            setCurrentResponse('');
+            recognition.start();
         }
     };
 
     const stopListening = () => {
-        if (recognitionRef.current) {
+        if (recognition && isListening) {
+            recognition.stop();
             setIsListening(false);
-            recognitionRef.current.stop();
+            setVoiceState('idle');
         }
     };
 
-    const speakText = useCallback((text: string) => {
-        if (synthRef.current) {
-            // Cancel any ongoing speech
-            synthRef.current.cancel();
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = selectedLanguage;
-            utterance.volume = voiceVolume;
-            utterance.rate = speechRate;
-
-            utterance.onstart = () => setIsSpeaking(true);
-            utterance.onend = () => setIsSpeaking(false);
-            utterance.onerror = () => setIsSpeaking(false);
-
-            synthRef.current.speak(utterance);
-        }
-    }, [selectedLanguage, voiceVolume, speechRate]);
-
-    const processVoiceCommand = useCallback(async () => {
-        if (!currentTranscript.trim()) return;
-
-        setIsProcessing(true);
-        setIsListening(false);
-
+    const handleVoiceCommand = async (command: string) => {
+        const startTime = Date.now();
+        setVoiceState('processing');
+        
         try {
-            const response = await fetch('/api/ai/voice', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    transcript: currentTranscript,
-                    language: selectedLanguage,
-                    action: 'process_voice_command'
-                }),
+            const response = await aiAPI.chatWithAI(command, {
+                userId: session?.user?.id,
+                isVoiceCommand: true,
+                language: language
             });
 
-            if (response.ok) {
-                const data = await response.json();
+            const processingTime = Date.now() - startTime;
+            const responseText = response.message || 'Xin lỗi, tôi không hiểu yêu cầu của bạn.';
+            
+            setCurrentResponse(responseText);
+            
+            // Add to history
+            const newCommand: VoiceCommand = {
+                id: Date.now().toString(),
+                command,
+                response: responseText,
+                timestamp: new Date(),
+                processingTime
+            };
+            
+            setCommandHistory(prev => [newCommand, ...prev.slice(0, 9)]); // Keep last 10 commands
 
-                const session: VoiceSession = {
-                    id: Date.now().toString(),
-                    transcript: currentTranscript,
-                    response: data.response,
-                    timestamp: new Date(),
-                    duration: data.duration || 0
+            // Speak the response
+            await speakText(responseText);
+
+        } catch (error) {
+            console.error('Voice command error:', error);
+            const errorMessage = 'Xin lỗi, tôi đang gặp vấn đề kỹ thuật.';
+            setCurrentResponse(errorMessage);
+            await speakText(errorMessage);
+            setVoiceState('error');
+        }
+    };
+
+    const speakText = async (text: string) => {
+        return new Promise<void>((resolve) => {
+            if (synthesis && selectedVoice) {
+                // Cancel any ongoing speech
+                synthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.voice = selectedVoice;
+                utterance.volume = volume;
+                utterance.rate = speechRate;
+                utterance.lang = language;
+
+                utterance.onstart = () => {
+                    setVoiceState('speaking');
+                    setIsSpeaking(true);
                 };
 
-                setVoiceSessions(prev => [session, ...prev]);
+                utterance.onend = () => {
+                    setVoiceState('idle');
+                    setIsSpeaking(false);
+                    resolve();
+                };
 
-                // Speak the response
-                speakText(data.response);
+                utterance.onerror = (event) => {
+                    console.error('Speech synthesis error:', event);
+                    setVoiceState('idle');
+                    setIsSpeaking(false);
+                    resolve();
+                };
+
+                synthesis.speak(utterance);
             } else {
-                throw new Error('Voice processing failed');
+                resolve();
             }
-        } catch (error) {
-            console.error('Voice processing error:', error);
-            const errorMessage = 'Xin lỗi, tôi không thể xử lý yêu cầu của bạn lúc này.';
-
-            const errorSession: VoiceSession = {
-                id: Date.now().toString(),
-                transcript: currentTranscript,
-                response: errorMessage,
-                timestamp: new Date(),
-                duration: 0
-            };
-
-            setVoiceSessions(prev => [errorSession, ...prev]);
-            speakText(errorMessage);
-        } finally {
-            setIsProcessing(false);
-            setCurrentTranscript('');
-        }
-    }, [currentTranscript, selectedLanguage, speakText]);
-
-    const stopSpeaking = () => {
-        if (synthRef.current) {
-            synthRef.current.cancel();
-            setIsSpeaking(false);
-        }
-    };
-
-    const executeQuickCommand = (command: string) => {
-        setCurrentTranscript(command);
-        setTimeout(() => {
-            processVoiceCommand();
-        }, 500);
-    };
-
-    const formatTime = (date: Date) => {
-        return date.toLocaleTimeString('vi-VN', {
-            hour: '2-digit',
-            minute: '2-digit'
         });
     };
 
+    const stopSpeaking = () => {
+        if (synthesis) {
+            synthesis.cancel();
+            setIsSpeaking(false);
+            setVoiceState('idle');
+        }
+    };
+
+    const handleQuickCommand = async (command: string) => {
+        setCurrentCommand(command);
+        await handleVoiceCommand(command);
+    };
+
+    const getStateIcon = () => {
+        switch (voiceState) {
+            case 'listening':
+                return <Mic className="w-8 h-8 text-red-500 animate-pulse" />;
+            case 'processing':
+                return <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />;
+            case 'speaking':
+                return <Volume2 className="w-8 h-8 text-green-500 animate-bounce" />;
+            case 'error':
+                return <MicOff className="w-8 h-8 text-red-500" />;
+            default:
+                return <Mic className="w-8 h-8 text-gray-400" />;
+        }
+    };
+
+    const getStateText = () => {
+        switch (voiceState) {
+            case 'listening':
+                return 'Đang nghe...';
+            case 'processing':
+                return 'Đang xử lý...';
+            case 'speaking':
+                return 'Đang trả lời...';
+            case 'error':
+                return 'Có lỗi xảy ra';
+            default:
+                return 'Nhấn để bắt đầu';
+        }
+    };
+
+    if (status === 'loading') {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-orange-500 mx-auto mb-4" />
+                    <p className="text-gray-600">Đang khởi động Voice Assistant...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!session) {
+        return null;
+    }
+
     return (
-        <>
+        <div className="page-container min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
             <Head>
                 <title>Voice Assistant - Smart Cooking AI</title>
-                <meta name="description" content="Trợ lý giọng nói thông minh cho nấu ăn - Smart Cooking AI" />
+                <meta name="description" content="Trợ lý giọng nói thông minh cho nấu ăn" />
             </Head>
 
-            <div className="min-h-screen bg-gray-50">
-                <Header />
-
-                <div className="max-w-4xl mx-auto px-4 py-8">
-                    {/* Voice Control Header */}
-                    <div className="text-center mb-8">
-                        <div className="flex justify-center mb-4">
-                            <div className={`w-32 h-32 rounded-full flex items-center justify-center transition-all duration-300 ${isListening
-                                ? 'bg-gradient-to-r from-red-500 to-pink-500 animate-pulse scale-110'
-                                : isProcessing
-                                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500 animate-spin'
-                                    : isSpeaking
-                                        ? 'bg-gradient-to-r from-green-500 to-blue-500 animate-bounce'
-                                        : 'bg-gradient-to-r from-orange-500 to-red-500'
-                                }`}>
-                                {isListening ? (
-                                    <Mic className="h-16 w-16 text-white" />
-                                ) : isProcessing ? (
-                                    <RotateCcw className="h-16 w-16 text-white" />
-                                ) : isSpeaking ? (
-                                    <Volume2 className="h-16 w-16 text-white" />
-                                ) : (
-                                    <Headphones className="h-16 w-16 text-white" />
-                                )}
+            {/* Header */}
+            <nav className="navbar bg-white/80 backdrop-blur-sm border-b shadow-sm sticky top-0 z-50">
+                <div className="container-modern">
+                    <div className="flex items-center justify-between py-4">
+                        <div className="flex items-center space-x-4">
+                            <Link href="/dashboard" className="flex items-center space-x-2 text-gray-600 hover:text-purple-500 transition-colors">
+                                <ArrowLeft className="w-5 h-5" />
+                                <span>Dashboard</span>
+                            </Link>
+                            <div className="h-6 w-px bg-gray-300"></div>
+                            <div className="flex items-center space-x-2">
+                                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                                    <Headphones className="w-4 h-4 text-white" />
+                                </div>
+                                <div>
+                                    <span className="text-lg font-bold gradient-text">Voice Assistant</span>
+                                    <div className="flex items-center space-x-1 text-xs text-gray-500">
+                                        <Radio className="w-3 h-3 text-green-500" />
+                                        <span>Sẵn sàng</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                            Voice Assistant 🎤
-                        </h1>
-
-                        <div className="text-lg text-gray-600 mb-4">
-                            {isListening && (
-                                <p className="text-red-500 animate-pulse">🔴 Đang nghe...</p>
-                            )}
-                            {isProcessing && (
-                                <p className="text-yellow-500">⚡ Đang xử lý...</p>
-                            )}
-                            {isSpeaking && (
-                                <p className="text-green-500">🔊 Đang phát âm...</p>
-                            )}
-                            {!isListening && !isProcessing && !isSpeaking && (
-                                <p>Nhấn và giữ để nói với AI</p>
-                            )}
+                        <div className="flex items-center space-x-2">
+                            <button className="btn-outline btn-sm">
+                                <Settings className="w-4 h-4 mr-2" />
+                                Cài đặt
+                            </button>
                         </div>
-
-                        {currentTranscript && (
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                                <p className="text-blue-800 font-medium">&quot;{currentTranscript}&quot;</p>
-                            </div>
-                        )}
                     </div>
+                </div>
+            </nav>
 
-                    {/* Voice Controls */}
-                    <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-                        <div className="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0 lg:space-x-6">
-                            {/* Main Control Buttons */}
-                            <div className="flex items-center space-x-4">
-                                <button
-                                    onMouseDown={startListening}
-                                    onMouseUp={stopListening}
-                                    onTouchStart={startListening}
-                                    onTouchEnd={stopListening}
-                                    title={isListening ? "Dừng ghi âm" : "Bắt đầu ghi âm"}
-                                    className={`p-4 rounded-full transition-all duration-300 ${isListening
-                                        ? 'bg-red-500 text-white scale-110'
-                                        : 'bg-orange-500 hover:bg-orange-600 text-white'
-                                        }`}
-                                    disabled={isProcessing}
-                                >
-                                    {isListening ? <MicOff className="h-6 w-6" /> : <Mic className="h-6 w-6" />}
-                                </button>
+            <div className="container-modern py-8">
+                <div className="grid lg:grid-cols-3 gap-8">
+                    {/* Main Voice Interface */}
+                    <div className="lg:col-span-2">
+                        <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                            {/* Voice State Indicator */}
+                            <div className="mb-8">
+                                <div className={`w-32 h-32 mx-auto rounded-full flex items-center justify-center mb-4 ${
+                                    voiceState === 'listening' ? 'bg-red-100 animate-pulse' :
+                                    voiceState === 'processing' ? 'bg-blue-100' :
+                                    voiceState === 'speaking' ? 'bg-green-100' :
+                                    voiceState === 'error' ? 'bg-red-100' :
+                                    'bg-gray-100'
+                                }`}>
+                                    {getStateIcon()}
+                                </div>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                                    {getStateText()}
+                                </h2>
+                                <p className="text-gray-600">
+                                    {voiceState === 'idle' && 'Nhấn micro để bắt đầu trò chuyện'}
+                                    {voiceState === 'listening' && 'Tôi đang lắng nghe bạn...'}
+                                    {voiceState === 'processing' && 'Đang suy nghĩ về câu trả lời...'}
+                                    {voiceState === 'speaking' && 'Tôi đang trả lời bạn...'}
+                                    {voiceState === 'error' && 'Vui lòng thử lại'}
+                                </p>
+                            </div>
 
-                                {isSpeaking ? (
+                            {/* Current Command/Response */}
+                            {currentCommand && (
+                                <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                    <h3 className="text-sm font-medium text-blue-900 mb-2 flex items-center">
+                                        <User className="w-4 h-4 mr-2" />
+                                        Bạn đã nói:
+                                    </h3>
+                                    <p className="text-blue-800">{currentCommand}</p>
+                                </div>
+                            )}
+
+                            {currentResponse && (
+                                <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
+                                    <h3 className="text-sm font-medium text-green-900 mb-2 flex items-center">
+                                        <Brain className="w-4 h-4 mr-2" />
+                                        AI trả lời:
+                                    </h3>
+                                    <p className="text-green-800">{currentResponse}</p>
+                                </div>
+                            )}
+
+                            {/* Voice Controls */}
+                            <div className="flex justify-center space-x-4">
+                                {!isListening ? (
+                                    <button
+                                        onClick={startListening}
+                                        disabled={voiceState === 'processing' || voiceState === 'speaking'}
+                                        className="btn-primary btn-lg px-8 py-4 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transition-all"
+                                    >
+                                        <Mic className="w-6 h-6 mr-3" />
+                                        Bắt đầu nói
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={stopListening}
+                                        className="btn-danger btn-lg px-8 py-4 rounded-2xl hover:scale-105 transition-all"
+                                    >
+                                        <Square className="w-6 h-6 mr-3" />
+                                        Dừng nghe
+                                    </button>
+                                )}
+
+                                {isSpeaking && (
                                     <button
                                         onClick={stopSpeaking}
-                                        title="Dừng phát âm"
-                                        className="p-4 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors"
+                                        className="btn-secondary btn-lg px-8 py-4 rounded-2xl hover:scale-105 transition-all"
                                     >
-                                        <VolumeX className="h-6 w-6" />
-                                    </button>
-                                ) : (
-                                    <button
-                                        disabled
-                                        title="Không có âm thanh đang phát"
-                                        className="p-4 rounded-full bg-gray-300 text-gray-500 cursor-not-allowed"
-                                    >
-                                        <Volume2 className="h-6 w-6" />
+                                        <VolumeX className="w-6 h-6 mr-3" />
+                                        Dừng nói
                                     </button>
                                 )}
                             </div>
 
-                            {/* Language Selector */}
-                            <div className="flex items-center space-x-4">
-                                <Languages className="h-5 w-5 text-gray-500" />
-                                <select
-                                    value={selectedLanguage}
-                                    onChange={(e) => setSelectedLanguage(e.target.value)}
-                                    title="Chọn ngôn ngữ"
-                                    className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                                >
-                                    {languages.map(lang => (
-                                        <option key={lang.code} value={lang.code}>
-                                            {lang.flag} {lang.name}
-                                        </option>
+                            {/* Quick Commands */}
+                            <div className="mt-8">
+                                <h3 className="text-lg font-semibold text-gray-900 mb-4 text-left">Lệnh nhanh</h3>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {quickCommands.map((command, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => handleQuickCommand(command)}
+                                            disabled={voiceState !== 'idle'}
+                                            className="p-3 text-sm bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-lg transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed group"
+                                        >
+                                            <div className="flex items-start space-x-2">
+                                                <Sparkles className="w-4 h-4 text-purple-500 mt-0.5 group-hover:scale-110 transition-transform" />
+                                                <span className="text-purple-700">{command}</span>
+                                            </div>
+                                        </button>
                                     ))}
-                                </select>
-                            </div>
-
-                            {/* Volume Controls */}
-                            <div className="flex items-center space-x-4">
-                                <Volume2 className="h-5 w-5 text-gray-500" />
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="1"
-                                    step="0.1"
-                                    value={voiceVolume}
-                                    onChange={(e) => setVoiceVolume(parseFloat(e.target.value))}
-                                    title="Điều chỉnh âm lượng"
-                                    className="w-20"
-                                />
-                                <span className="text-sm text-gray-500 w-8">{Math.round(voiceVolume * 100)}%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Quick Commands */}
-                    <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4">Lệnh nhanh</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {quickCommands.map((cmd, index) => (
-                                <div
-                                    key={index}
-                                    className="border border-gray-200 rounded-lg p-4 hover:border-orange-300 hover:bg-orange-50 transition-colors cursor-pointer"
-                                    onClick={() => executeQuickCommand(cmd.command)}
-                                >
-                                    <h3 className="font-semibold text-gray-900 mb-2">{cmd.title}</h3>
-                                    <p className="text-sm text-gray-600 mb-2">{cmd.example}</p>
-                                    <button className="text-orange-600 hover:text-orange-700 text-sm font-medium">
-                                        Thực hiện →
-                                    </button>
                                 </div>
-                            ))}
+                            </div>
                         </div>
                     </div>
 
-                    {/* Voice Sessions History */}
-                    <div className="bg-white rounded-2xl shadow-lg p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4">Lịch sử trò chuyện</h2>
+                    {/* Sidebar */}
+                    <div className="space-y-6">
+                        {/* Voice Settings */}
+                        <div className="bg-white rounded-2xl shadow-lg p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                <Settings className="w-5 h-5 mr-2" />
+                                Cài đặt giọng nói
+                            </h3>
+                            
+                            <div className="space-y-4">
+                                <div>
+                                    <label htmlFor="language-select" className="block text-sm font-medium text-gray-700 mb-2">
+                                        Ngôn ngữ
+                                    </label>
+                                    <select
+                                        id="language-select"
+                                        value={language}
+                                        onChange={(e) => setLanguage(e.target.value)}
+                                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                    >
+                                        <option value="vi-VN">🇻🇳 Tiếng Việt</option>
+                                        <option value="en-US">🇺🇸 English</option>
+                                        <option value="ja-JP">🇯🇵 日本語</option>
+                                    </select>
+                                </div>
 
-                        {voiceSessions.length === 0 ? (
-                            <div className="text-center py-8 text-gray-500">
-                                <Headphones className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                                <p>Chưa có cuộc trò chuyện nào</p>
-                                <p className="text-sm">Bắt đầu nói để tạo cuộc trò chuyện đầu tiên</p>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Âm lượng: {Math.round(volume * 100)}%
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="1"
+                                        step="0.1"
+                                        value={volume}
+                                        onChange={(e) => setVolume(parseFloat(e.target.value))}
+                                        className="w-full"
+                                        title="Điều chỉnh âm lượng"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Tốc độ nói: {Math.round(speechRate * 100)}%
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min="0.5"
+                                        max="2"
+                                        step="0.1"
+                                        value={speechRate}
+                                        onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
+                                        className="w-full"
+                                        title="Điều chỉnh tốc độ nói"
+                                        placeholder="Tốc độ nói"
+                                    />
+                                </div>
                             </div>
-                        ) : (
-                            <div className="space-y-6">
-                                {voiceSessions.map((session) => (
-                                    <div key={session.id} className="border-l-4 border-orange-500 pl-4 py-2">
-                                        <div className="flex items-start justify-between mb-2">
-                                            <p className="text-sm text-gray-500">{formatTime(session.timestamp)}</p>
-                                            <button
-                                                onClick={() => speakText(session.response)}
-                                                className="text-orange-600 hover:text-orange-700 p-1"
-                                                title="Phát lại"
-                                            >
-                                                <Play className="h-4 w-4" />
-                                            </button>
-                                        </div>
+                        </div>
 
-                                        <div className="mb-3">
-                                            <p className="text-sm font-medium text-gray-700 mb-1">Bạn nói:</p>
-                                            <p className="text-gray-900 bg-blue-50 rounded-lg p-3">&quot;{session.transcript}&quot;</p>
+                        {/* Recent Commands */}
+                        <div className="bg-white rounded-2xl shadow-lg p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                <Timer className="w-5 h-5 mr-2" />
+                                Lịch sử gần đây
+                            </h3>
+                            
+                            <div className="space-y-3 max-h-96 overflow-y-auto">
+                                {commandHistory.length === 0 ? (
+                                    <p className="text-gray-500 text-sm">Chưa có lệnh nào</p>
+                                ) : (
+                                    commandHistory.map((cmd) => (
+                                        <div key={cmd.id} className="p-3 bg-gray-50 rounded-lg">
+                                            <div className="text-sm text-gray-600 mb-1">
+                                                <strong>Lệnh:</strong> {cmd.command}
+                                            </div>
+                                            <div className="text-sm text-gray-800 mb-2">
+                                                <strong>Phản hồi:</strong> {cmd.response.substring(0, 100)}
+                                                {cmd.response.length > 100 && '...'}
+                                            </div>
+                                            <div className="flex items-center justify-between text-xs text-gray-500">
+                                                <span>{cmd.timestamp.toLocaleTimeString('vi-VN')}</span>
+                                                {cmd.processingTime && (
+                                                    <span>{cmd.processingTime}ms</span>
+                                                )}
+                                            </div>
                                         </div>
-
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-700 mb-1">AI trả lời:</p>
-                                            <p className="text-gray-900 bg-orange-50 rounded-lg p-3">{session.response}</p>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))
+                                )}
                             </div>
-                        )}
+                        </div>
+
+                        {/* Tips */}
+                        <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl shadow-lg p-6 border border-orange-200">
+                            <h3 className="text-lg font-semibold text-orange-900 mb-4 flex items-center">
+                                <ChefHat className="w-5 h-5 mr-2" />
+                                Mẹo sử dụng
+                            </h3>
+                            
+                            <ul className="space-y-2 text-sm text-orange-800">
+                                <li className="flex items-start space-x-2">
+                                    <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0"></span>
+                                    <span>Nói rõ ràng và không quá nhanh</span>
+                                </li>
+                                <li className="flex items-start space-x-2">
+                                    <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0"></span>
+                                    <span>Sử dụng từ khóa như &quot;tạo công thức&quot;, &quot;nấu món&quot;</span>
+                                </li>
+                                <li className="flex items-start space-x-2">
+                                    <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0"></span>
+                                    <span>Đề cập nguyên liệu cụ thể để có kết quả tốt hơn</span>
+                                </li>
+                                <li className="flex items-start space-x-2">
+                                    <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0"></span>
+                                    <span>Hỏi về thời gian nấu, nhiệt độ, kỹ thuật</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
-    const session = await getSession(context);
-
-    return {
-        props: {
-            session,
-        },
-    };
-};

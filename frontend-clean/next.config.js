@@ -2,10 +2,10 @@
 const nextConfig = {
   reactStrictMode: false, // Tắt strict mode để tránh hydration errors
 
-  // Clean experimental config
-  experimental: {
-    esmExternals: false,
-  },
+  // Remove experimental.esmExternals to fix warning
+  // experimental: {
+  //   esmExternals: false,
+  // },
 
   images: {
     remotePatterns: [
@@ -24,6 +24,36 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "source.unsplash.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "via.placeholder.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*",
         port: "",
         pathname: "/**",
       },

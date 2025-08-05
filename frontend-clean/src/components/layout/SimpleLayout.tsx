@@ -2,7 +2,7 @@
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import type { Session } from 'next-auth';
-import Header from './Header2';
+import Header from './Header';
 import { motion } from 'framer-motion';
 
 interface SimpleLayoutProps {

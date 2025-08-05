@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Google Images Integration</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .image-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 20px 0;
+      }
+      .image-item {
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 8px;
+      }
+      .image-item img {
+        max-width: 200px;
+        max-height: 150px;
+      }
+      button {
+        padding: 10px 20px;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #45a049;
+      }
+      #loading {
+        display: none;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🍲 Test Google Images for Vietnamese Food</h1>
+
+    <div>
+      <input
+        type="text"
+        id="queryInput"
+        placeholder="Nhập tên món ăn..."
+        value="Phở Bò"
+        style="padding: 8px; width: 300px"
+      />
+      <button onclick="searchImages()">Tìm Hình Ảnh</button>
+      <div id="loading">Đang tìm kiếm...</div>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+      async function searchImages() {
+        const query = document.getElementById("queryInput").value;
+        const loading = document.getElementById("loading");
+        const results = document.getElementById("results");
+
+        loading.style.display = "block";
+        results.innerHTML = "";
+
+        try {
+          const response = await fetch(
+            "http://localhost:8001/api/ai/search-food-images",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                query: query,
+                num_results: 4,
+                language: "vi",
+              }),
+            }
+          );
+
+          const data = await response.json();
+          loading.style.display = "none";
+
+          if (data.success) {
+            results.innerHTML = `
+                        <h3>✅ Tìm thấy ${data.total_results} hình ảnh cho "${data.query}" (Source: ${data.source})</h3>
+                        <div class="image-container">
+                            ${data.images
+                              .map(
+                                (img) => `
+                                <div class="image-item">
+                                    <img src="${img.url}" alt="${img.title}" onerror="this.src='https://via.placeholder.com/200x150?text=Error'">
+                                    <div><strong>${img.title}</strong></div>
+                                    <div style="font-size: 12px; color: #666;">${img.snippet}</div>
+                                </div>
+                            `
+                              )
+                              .join("")}
+                        </div>
+                    `;
+          } else {
+            results.innerHTML = `<div style="color: red;">❌ Lỗi: ${data.error}</div>`;
+          }
+        } catch (error) {
+          loading.style.display = "none";
+          results.innerHTML = `<div style="color: red;">❌ Lỗi kết nối: ${error.message}</div>`;
+        }
+      }
+
+      // Test ngay khi load page
+      window.onload = () => searchImages();
+    </script>
+  </body>
+</html>

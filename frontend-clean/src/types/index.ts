@@ -235,13 +235,28 @@ export interface VoiceAction {
 // ===== NOTIFICATIONS =====
 export interface Notification {
   id: string;
-  type: "info" | "success" | "warning" | "error";
+  type:
+    | "LIKE"
+    | "FOLLOW"
+    | "COMMENT"
+    | "RECIPE_APPROVED"
+    | "ACHIEVEMENT"
+    | "SYSTEM"
+    | "AI_UPDATE"
+    | "RECIPE_SHARED";
   title: string;
   message: string;
   timestamp: string;
   isRead: boolean;
+  isImportant: boolean;
   actionUrl?: string;
-  actionText?: string;
+  avatar?: string;
+  senderName?: string;
+  metadata?: {
+    recipeName?: string;
+    achievementName?: string;
+    updateVersion?: string;
+  };
 }
 
 // ===== SEARCH & FILTERS =====

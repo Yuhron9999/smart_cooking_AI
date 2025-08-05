@@ -6,13 +6,13 @@
     "scripts": {
         "dev": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run ai-service\"",
         "backend": "cd backend && ./mvnw spring-boot:run",
-        "frontend": "cd frontend-nextjs && npm run dev",
+        "frontend": "cd frontend-clean && npm run dev",
         "ai-service": "cd ai-service && python app.py",
-        "build": "cd frontend-nextjs && npm run build",
+        "build": "cd frontend-clean && npm run build",
         "test": "npm run test:backend && npm run test:frontend",
         "test:backend": "cd backend && ./mvnw test",
-        "test:frontend": "cd frontend-nextjs && npm test",
-        "install:all": "npm install && cd backend && echo 'Backend uses Maven' && cd ../frontend-nextjs && npm install && cd ../ai-service && pip install -r requirements.txt"
+        "test:frontend": "cd frontend-clean && npm test",
+        "install:all": "npm install && cd backend && echo 'Backend uses Maven' && cd ../frontend-clean && npm install && cd ../ai-service && pip install -r requirements.txt"
     },
     "keywords": [
         "cooking",

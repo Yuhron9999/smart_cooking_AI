@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
-import Header from '@/components/layout/Header_fixed';
+import Header from '@/components/layout/Header';
 import {
     BookOpen,
     Play,

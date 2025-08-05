@@ -17,7 +17,8 @@ import {
     Mic,
     Globe,
     Heart,
-    Home
+    Home,
+    Camera
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -57,11 +58,11 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
     const t = (key: string) => fallbackTranslations[key as keyof typeof fallbackTranslations] || key;
 
     const navigation = [
-        { name: t('navigation.home') || 'Home', href: '/', icon: Home },
-        { name: t('navigation.recipes') || 'Recipes', href: '/recipes', icon: ChefHat },
-        { name: t('navigation.ai_chat') || 'AI Chat', href: '/ai-chat', icon: Sparkles },
-        { name: t('navigation.profile') || 'Profile', href: '/profile', icon: User },
-        { name: t('navigation.voice') || 'Voice', href: '/voice-assistant', icon: Mic },
+        { name: 'Trang chủ', href: '/dashboard', icon: Home },
+        { name: 'Công thức', href: '/recipes', icon: ChefHat },
+        { name: 'AI Assistant', href: '/ai-chat', icon: Sparkles },
+        { name: 'Voice Chef', href: '/voice-assistant', icon: Mic },
+        { name: 'Nhận dạng ảnh', href: '/image-recognition', icon: Camera },
     ];
 
     const handleSearch = (e: React.FormEvent) => {
@@ -77,7 +78,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <div className="flex items-center">
-                        <Link href="/" className="flex items-center space-x-2 group">
+                        <Link href="/dashboard" className="flex items-center space-x-2 group">
                             <div className="relative">
                                 <ChefHat className="h-8 w-8 text-orange-500 group-hover:text-orange-600 transition-colors" />
                                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full animate-pulse"></div>

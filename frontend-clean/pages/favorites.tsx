@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useSession, signIn } from 'next-auth/react';
-import Header from '@/components/layout/Header_fixed';
+import Header from '@/components/layout/Header';
 import {
     Heart,
     Users,

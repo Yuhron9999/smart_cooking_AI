@@ -1,5 +1,15 @@
 import { aiServiceApi } from "./api";
-import { ApiResponse } from "@/types";
+import {
+  ApiResponse,
+  AIRecipeRequest,
+  AIRecipeResponse,
+  ImageRecognitionRequest,
+  ImageRecognitionResponse,
+  ChatMessage,
+  VoiceCommand,
+  VoiceData,
+  VoiceResponse,
+} from "../types";
 
 // AI Chat Types
 export interface ChatRequest {
@@ -65,7 +75,7 @@ export interface NutritionAnalysisResponse {
 
 // Learning Path Types
 export interface LearningPathRequest {
-  user_level: 'beginner' | 'intermediate' | 'advanced';
+  user_level: "beginner" | "intermediate" | "advanced";
   cuisine_preference: string;
   language?: string;
   available_time?: number;
@@ -137,7 +147,6 @@ export interface NearbyPlacesResponse {
   places: NearbyPlace[];
   total_found: number;
 }
-} from "@/types";
 
 export class AIService {
   // Recipe Generation
