@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import EnhancedLayout from '../components/layout/EnhancedLayout';
 import {
-    ArrowLeft,
     Mic,
     MicOff,
     Volume2,
@@ -281,15 +279,22 @@ export default function VoiceAssistantPage() {
     }
 
     return (
-        <div className="page-container min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
-            <Head>
-                <title>Voice Assistant - Smart Cooking AI</title>
-                <meta name="description" content="Trợ lý giọng nói thông minh cho nấu ăn" />
-            </Head>
-
-            {/* Header */}
-            <nav className="navbar bg-white/80 backdrop-blur-sm border-b shadow-sm sticky top-0 z-50">
-                <div className="container-modern">
+        <EnhancedLayout
+            title="Voice Assistant - Smart Cooking AI"
+            description="Trợ lý giọng nội thông minh cho nấu ăn"
+            pageIcon={Headphones}
+            pageTitle="Voice Assistant"
+            pageSubtitle="Sử dụng giọng nói để tìm kiếm công thức và hỏi đáp về nấu ăn"
+            navbarTheme="glass"
+            showBackButton={true}
+            backButtonHref="/dashboard"
+            actions={
+                <button className="bg-orange-500 text-white rounded-lg px-4 py-2 flex items-center hover:bg-orange-600 transition-colors">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Cài đặt
+                </button>
+            }
+        >
                     <div className="flex items-center justify-between py-4">
                         <div className="flex items-center space-x-4">
                             <Link href="/dashboard" className="flex items-center space-x-2 text-gray-600 hover:text-purple-500 transition-colors">
@@ -546,6 +551,6 @@ export default function VoiceAssistantPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </EnhancedLayout>
     );
 }

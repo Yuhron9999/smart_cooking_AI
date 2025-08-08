@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import EnhancedLayout from '../components/layout/EnhancedLayout';
 import {
     ChefHat,
-    ArrowLeft,
     Send,
     Mic,
     Camera,
@@ -365,25 +364,22 @@ export default function AIChatPage() {
     }
 
     return (
-        <div className="page-container min-h-screen bg-gray-50">
-            <Head>
-                <title>AI Assistant - Smart Cooking AI</title>
-                <meta name="description" content="Trò chuyện với AI Assistant để tạo công thức nấu ăn thông minh" />
-            </Head>
-
-            {/* Header */}
-            <nav className="navbar bg-white border-b shadow-sm sticky top-0 z-50">
-                <div className="container-modern">
-                    <div className="flex items-center justify-between py-4">
-                        <div className="flex items-center space-x-4">
-                            <Link href="/dashboard" className="flex items-center space-x-2 text-gray-600 hover:text-orange-500 transition-colors">
-                                <ArrowLeft className="w-5 h-5" />
-                                <span>Dashboard</span>
-                            </Link>
-                            <div className="h-6 w-px bg-gray-300"></div>
-                            <div className="flex items-center space-x-2">
-                                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                                    <Brain className="w-4 h-4 text-white" />
+        <EnhancedLayout
+            title="AI Assistant - Smart Cooking AI"
+            description="Trò chuyện với AI Assistant để tạo công thức nấu ăn thông minh"
+            pageIcon={Brain}
+            pageTitle="AI Assistant"
+            pageSubtitle="Trò chuyện thông minh để nhận công thức nấu ăn và hướng dẫn chi tiết"
+            navbarTheme="glass"
+            showBackButton={true}
+            backButtonHref="/dashboard"
+            actions={
+                <button className="bg-orange-500 text-white rounded-lg px-4 py-2 flex items-center hover:bg-orange-600 transition-colors">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Tùy chỉnh
+                </button>
+            }
+        >
                                 </div>
                                 <div>
                                     <span className="text-lg font-bold gradient-text">AI Assistant</span>
@@ -556,6 +552,6 @@ export default function AIChatPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </EnhancedLayout>
     );
 }
