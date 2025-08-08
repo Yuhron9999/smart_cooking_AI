@@ -5,10 +5,10 @@ import NotificationSystem from '../NotificationSystem';
 
 interface EnhancedLayoutProps {
     children: React.ReactNode;
-    title: string;
+    title?: string;
     description?: string;
     pageIcon?: React.ComponentType<any>;
-    pageTitle: string;
+    pageTitle?: string;
     pageSubtitle?: string;
     showBackButton?: boolean;
     backButtonHref?: string;
