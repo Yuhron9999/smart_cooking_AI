@@ -9,3 +9,5 @@ const NotificationSystem: React.FC = () => {
 };
 
 export default NotificationSystem;
+
+export default NotificationSystem;
