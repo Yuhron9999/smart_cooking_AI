@@ -126,6 +126,7 @@ Thumbs.db
 # Build directories
 build/
 dist/
+target/
 
 # Uploaded files
 uploads/
