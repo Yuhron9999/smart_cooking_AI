@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import EnhancedLayout from '../components/layout/EnhancedLayout';
 import {
-    ArrowLeft,
     Mic,
     MicOff,
     Volume2,
@@ -83,7 +81,7 @@ export default function VoiceAssistantPage() {
             speechRecognition.onresult = (event: any) => {
                 const transcript = event.results[0][0].transcript;
                 setCurrentCommand(transcript);
-                
+
                 if (event.results[0].isFinal) {
                     handleVoiceCommand(transcript);
                 }
@@ -108,16 +106,16 @@ export default function VoiceAssistantPage() {
         // Initialize speech synthesis
         if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
             setSynthesis(window.speechSynthesis);
-            
+
             const loadVoices = () => {
                 const availableVoices = window.speechSynthesis.getVoices();
                 setVoices(availableVoices);
-                
+
                 // Find Vietnamese voice
-                const vietnameseVoice = availableVoices.find(voice => 
+                const vietnameseVoice = availableVoices.find(voice =>
                     voice.lang.includes('vi') || voice.name.includes('Vietnamese')
                 );
-                
+
                 if (vietnameseVoice) {
                     setSelectedVoice(vietnameseVoice);
                 } else {
@@ -149,19 +147,29 @@ export default function VoiceAssistantPage() {
     const handleVoiceCommand = async (command: string) => {
         const startTime = Date.now();
         setVoiceState('processing');
-        
+
         try {
-            const response = await aiAPI.chatWithAI(command, {
+            // Thêm system prompt để AI hiểu context tốt hơn
+            const systemPrompt = `Bạn là trợ lý nấu ăn thông minh của Smart Cooking AI. 
+            Hãy trả lời ngắn gọn (1-2 câu), thân thiện và hữu ích về nấu ăn.
+            Tập trung vào: công thức, nguyên liệu, kỹ thuật nấu ăn, dinh dưỡng.
+            Trả lời bằng tiếng Việt.`;
+
+            const enhancedMessage = `${systemPrompt}\n\nCâu hỏi: ${command}`;
+
+            const response = await aiAPI.chatWithAI(enhancedMessage, {
                 userId: session?.user?.id,
                 isVoiceCommand: true,
-                language: language
+                language: language,
+                maxTokens: 150, // Giới hạn độ dài trả lời
+                context: 'voice_cooking_assistant'
             });
 
             const processingTime = Date.now() - startTime;
             const responseText = response.message || 'Xin lỗi, tôi không hiểu yêu cầu của bạn.';
-            
+
             setCurrentResponse(responseText);
-            
+
             // Add to history
             const newCommand: VoiceCommand = {
                 id: Date.now().toString(),
@@ -170,7 +178,7 @@ export default function VoiceAssistantPage() {
                 timestamp: new Date(),
                 processingTime
             };
-            
+
             setCommandHistory(prev => [newCommand, ...prev.slice(0, 9)]); // Keep last 10 commands
 
             // Speak the response
@@ -190,7 +198,7 @@ export default function VoiceAssistantPage() {
             if (synthesis && selectedVoice) {
                 // Cancel any ongoing speech
                 synthesis.cancel();
-                
+
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.voice = selectedVoice;
                 utterance.volume = volume;
@@ -281,46 +289,23 @@ export default function VoiceAssistantPage() {
     }
 
     return (
-        <div className="page-container min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
-            <Head>
-                <title>Voice Assistant - Smart Cooking AI</title>
-                <meta name="description" content="Trợ lý giọng nói thông minh cho nấu ăn" />
-            </Head>
-
-            {/* Header */}
-            <nav className="navbar bg-white/80 backdrop-blur-sm border-b shadow-sm sticky top-0 z-50">
-                <div className="container-modern">
-                    <div className="flex items-center justify-between py-4">
-                        <div className="flex items-center space-x-4">
-                            <Link href="/dashboard" className="flex items-center space-x-2 text-gray-600 hover:text-purple-500 transition-colors">
-                                <ArrowLeft className="w-5 h-5" />
-                                <span>Dashboard</span>
-                            </Link>
-                            <div className="h-6 w-px bg-gray-300"></div>
-                            <div className="flex items-center space-x-2">
-                                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                                    <Headphones className="w-4 h-4 text-white" />
-                                </div>
-                                <div>
-                                    <span className="text-lg font-bold gradient-text">Voice Assistant</span>
-                                    <div className="flex items-center space-x-1 text-xs text-gray-500">
-                                        <Radio className="w-3 h-3 text-green-500" />
-                                        <span>Sẵn sàng</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                            <button className="btn-outline btn-sm">
-                                <Settings className="w-4 h-4 mr-2" />
-                                Cài đặt
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
+        <EnhancedLayout
+            title="Voice Assistant - Smart Cooking AI"
+            description="Trợ lý giọng nội thông minh cho nấu ăn"
+            pageIcon={Headphones}
+            pageTitle="Voice Assistant"
+            pageSubtitle="Sử dụng giọng nói để tìm kiếm công thức và hỏi đáp về nấu ăn"
+            navbarTheme="glass"
+            showBackButton={true}
+            backButtonHref="/dashboard"
+            actions={
+                <button className="bg-orange-500 text-white rounded-lg px-4 py-2 flex items-center hover:bg-orange-600 transition-colors">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Cài đặt
+                </button>
+            }
+            className="bg-gradient-to-br from-purple-50 to-blue-50"
+        >
             <div className="container-modern py-8">
                 <div className="grid lg:grid-cols-3 gap-8">
                     {/* Main Voice Interface */}
@@ -328,13 +313,12 @@ export default function VoiceAssistantPage() {
                         <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
                             {/* Voice State Indicator */}
                             <div className="mb-8">
-                                <div className={`w-32 h-32 mx-auto rounded-full flex items-center justify-center mb-4 ${
-                                    voiceState === 'listening' ? 'bg-red-100 animate-pulse' :
+                                <div className={`w-32 h-32 mx-auto rounded-full flex items-center justify-center mb-4 ${voiceState === 'listening' ? 'bg-red-100 animate-pulse' :
                                     voiceState === 'processing' ? 'bg-blue-100' :
-                                    voiceState === 'speaking' ? 'bg-green-100' :
-                                    voiceState === 'error' ? 'bg-red-100' :
-                                    'bg-gray-100'
-                                }`}>
+                                        voiceState === 'speaking' ? 'bg-green-100' :
+                                            voiceState === 'error' ? 'bg-red-100' :
+                                                'bg-gray-100'
+                                    }`}>
                                     {getStateIcon()}
                                 </div>
                                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -432,7 +416,7 @@ export default function VoiceAssistantPage() {
                                 <Settings className="w-5 h-5 mr-2" />
                                 Cài đặt giọng nói
                             </h3>
-                            
+
                             <div className="space-y-4">
                                 <div>
                                     <label htmlFor="language-select" className="block text-sm font-medium text-gray-700 mb-2">
@@ -491,7 +475,7 @@ export default function VoiceAssistantPage() {
                                 <Timer className="w-5 h-5 mr-2" />
                                 Lịch sử gần đây
                             </h3>
-                            
+
                             <div className="space-y-3 max-h-96 overflow-y-auto">
                                 {commandHistory.length === 0 ? (
                                     <p className="text-gray-500 text-sm">Chưa có lệnh nào</p>
@@ -523,7 +507,7 @@ export default function VoiceAssistantPage() {
                                 <ChefHat className="w-5 h-5 mr-2" />
                                 Mẹo sử dụng
                             </h3>
-                            
+
                             <ul className="space-y-2 text-sm text-orange-800">
                                 <li className="flex items-start space-x-2">
                                     <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0"></span>
@@ -546,6 +530,6 @@ export default function VoiceAssistantPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </EnhancedLayout>
     );
 }

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import EnhancedLayout from '../components/layout/EnhancedLayout';
 import {
     ChefHat,
-    ArrowLeft,
     Send,
     Mic,
     Camera,
@@ -247,8 +246,8 @@ export default function AIChatPage() {
 
                     {/* Message Content */}
                     <div className={`rounded-2xl px-4 py-3 ${isUser
-                            ? 'bg-orange-500 text-white'
-                            : 'bg-white border border-gray-200 text-gray-900'
+                        ? 'bg-orange-500 text-white'
+                        : 'bg-white border border-gray-200 text-gray-900'
                         }`}>
                         {message.images && (
                             <div className="mb-2">
@@ -365,46 +364,22 @@ export default function AIChatPage() {
     }
 
     return (
-        <div className="page-container min-h-screen bg-gray-50">
-            <Head>
-                <title>AI Assistant - Smart Cooking AI</title>
-                <meta name="description" content="Trò chuyện với AI Assistant để tạo công thức nấu ăn thông minh" />
-            </Head>
-
-            {/* Header */}
-            <nav className="navbar bg-white border-b shadow-sm sticky top-0 z-50">
-                <div className="container-modern">
-                    <div className="flex items-center justify-between py-4">
-                        <div className="flex items-center space-x-4">
-                            <Link href="/dashboard" className="flex items-center space-x-2 text-gray-600 hover:text-orange-500 transition-colors">
-                                <ArrowLeft className="w-5 h-5" />
-                                <span>Dashboard</span>
-                            </Link>
-                            <div className="h-6 w-px bg-gray-300"></div>
-                            <div className="flex items-center space-x-2">
-                                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                                    <Brain className="w-4 h-4 text-white" />
-                                </div>
-                                <div>
-                                    <span className="text-lg font-bold gradient-text">AI Assistant</span>
-                                    <div className="flex items-center space-x-1 text-xs text-gray-500">
-                                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                        <span>Đang hoạt động</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                            <button className="btn-outline btn-sm">
-                                <Settings className="w-4 h-4 mr-2" />
-                                Cài đặt
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
+        <EnhancedLayout
+            title="AI Assistant - Smart Cooking AI"
+            description="Trò chuyện với AI Assistant để tạo công thức nấu ăn thông minh"
+            pageIcon={Brain}
+            pageTitle="AI Assistant"
+            pageSubtitle="Trò chuyện thông minh để nhận công thức nấu ăn và hướng dẫn chi tiết"
+            navbarTheme="glass"
+            showBackButton={true}
+            backButtonHref="/dashboard"
+            actions={
+                <button className="bg-orange-500 text-white rounded-lg px-4 py-2 flex items-center hover:bg-orange-600 transition-colors">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Tùy chỉnh
+                </button>
+            }
+        >
             <div className="flex h-[calc(100vh-80px)]">
                 {/* Sidebar */}
                 <div className="hidden lg:block w-80 bg-white border-r border-gray-200 overflow-y-auto">
@@ -526,8 +501,8 @@ export default function AIChatPage() {
                                         <button
                                             onClick={handleVoiceRecording}
                                             className={`p-2 transition-colors ${isRecording
-                                                    ? 'text-red-500 animate-pulse'
-                                                    : 'text-gray-500 hover:text-orange-500'
+                                                ? 'text-red-500 animate-pulse'
+                                                : 'text-gray-500 hover:text-orange-500'
                                                 }`}
                                             title={isRecording ? 'Đang ghi âm...' : 'Ghi âm'}
                                         >
@@ -556,6 +531,6 @@ export default function AIChatPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </EnhancedLayout>
     );
 }
