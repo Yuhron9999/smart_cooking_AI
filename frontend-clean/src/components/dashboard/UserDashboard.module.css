@@ -1,0 +1,15 @@
+/* UserDashboard styles */
+
+.progressBar {
+  height: 0.75rem;
+  border-radius: 9999px;
+  transition: all 0.5s;
+  background: linear-gradient(to right, rgb(16 185 129), rgb(59 130 246));
+}
+
+.progressBarContainer {
+  width: 100%;
+  background-color: rgb(229 231 235);
+  border-radius: 9999px;
+  height: 0.75rem;
+}

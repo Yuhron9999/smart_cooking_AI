@@ -186,7 +186,7 @@ public class Recipe {
             this.totalRatings = 0;
         } else {
             double sum = ratings.stream()
-                    .mapToInt(RecipeRating::getRating)
+                    .mapToDouble(rating -> rating.getRating().doubleValue())
                     .average()
                     .orElse(0.0);
             this.averageRating = BigDecimal.valueOf(sum).setScale(2, RoundingMode.HALF_UP);

@@ -380,7 +380,56 @@ const Settings: React.FC = () => {
                                 </button>
                                 <button
                                     onClick={() => {
-                                        setSettings(defaultSettings);
+                                        setSettings({
+                                            account: {
+                                                twoFactorEnabled: false,
+                                                emailVerified: true,
+                                                phoneVerified: false,
+                                                lastPasswordChange: '2024-01-01'
+                                            },
+                                            privacy: {
+                                                profileVisibility: 'public',
+                                                activityTracking: true,
+                                                dataCollection: true,
+                                                personalization: true,
+                                                analytics: true
+                                            },
+                                            notifications: {
+                                                email: {
+                                                    newRecipes: true,
+                                                    weeklyDigest: true,
+                                                    recipeRecommendations: true,
+                                                    systemUpdates: true,
+                                                    securityAlerts: true
+                                                },
+                                                push: {
+                                                    enabled: true,
+                                                    newRecipes: true,
+                                                    cookingReminders: true,
+                                                    achievements: true,
+                                                    socialActivity: false
+                                                },
+                                                sound: {
+                                                    enabled: true,
+                                                    volume: 70,
+                                                    voiceAssistant: true
+                                                }
+                                            },
+                                            appearance: {
+                                                theme: 'system',
+                                                language: 'vi',
+                                                fontSize: 'medium',
+                                                animations: true,
+                                                compactMode: false
+                                            },
+                                            advanced: {
+                                                autoSave: true,
+                                                offlineMode: false,
+                                                debugMode: false,
+                                                experimentalFeatures: false,
+                                                dataSync: true
+                                            }
+                                        });
                                         setHasChanges(false);
                                     }}
                                     className="flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"

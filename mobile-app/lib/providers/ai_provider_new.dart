@@ -65,8 +65,8 @@ class AIProvider with ChangeNotifier {
       // Add user message
       final userMessage = ChatMessage(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        content: message,
-        isUser: true,
+        message: message,
+        type: MessageType.user,
         timestamp: DateTime.now(),
       );
       _messages.add(userMessage);
@@ -77,9 +77,9 @@ class AIProvider with ChangeNotifier {
 
       final aiMessage = ChatMessage(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        content:
+        message:
             "Tôi hiểu bạn muốn nói về: $message. Tôi sẽ giúp bạn với điều đó!",
-        isUser: false,
+        type: MessageType.ai,
         timestamp: DateTime.now(),
       );
       _messages.add(aiMessage);

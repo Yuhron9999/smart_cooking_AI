@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import {
     Container, Box, Typography, Paper, TextField, Button,
     CircularProgress, Card, CardContent, Chip, Pagination,
-    Grid, InputAdornment, IconButton, Tabs, Tab, Table,
+    InputAdornment, IconButton, Tabs, Tab, Table,
     TableBody, TableCell, TableContainer, TableHead, TableRow,
     Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
@@ -14,7 +14,6 @@ import { useSmartCookingApi } from '../../hooks/useSmartCookingApi';
 import { useTranslation } from 'react-i18next';
 import { UserAiInteraction, AiType } from '../../types/api';
 import { format, parseISO } from 'date-fns';
-import { GridContainer, GridItem } from '../common/GridHelper';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -181,8 +180,8 @@ const AiInteractionHistory: React.FC = () => {
                 </Typography>
 
                 <Paper sx={{ p: 2, mb: 4 }}>
-                    <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={12} md={6}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
+                        <Box sx={{ flex: { xs: '100%', md: '1 1 48%' } }}>
                             <TextField
                                 fullWidth
                                 placeholder={t('aiHistory.searchPlaceholder')}
@@ -201,8 +200,8 @@ const AiInteractionHistory: React.FC = () => {
                                     if (e.key === 'Enter') handleSearch();
                                 }}
                             />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
+                        </Box>
+                        <Box sx={{ flex: { xs: '100%', md: '1 1 48%' } }}>
                             <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
                                 <Button
                                     variant="outlined"
@@ -211,38 +210,38 @@ const AiInteractionHistory: React.FC = () => {
                                     {t('aiHistory.reset')}
                                 </Button>
                             </Box>
-                        </Grid>
-                    </Grid>
+                        </Box>
+                    </Box>
                 </Paper>
 
-                <GridContainer container spacing={4}>
-                    <GridItem item xs={12} md={4}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                    <Box sx={{ flex: { xs: '100%', md: '1 1 33%' } }}>
                         {/* Thống kê */}
                         <Paper sx={{ p: 3, height: '100%' }}>
                             <Typography variant="h6" gutterBottom>
                                 {t('aiHistory.stats')}
                             </Typography>
 
-                            <GridContainer container spacing={2}>
-                                <GridItem item xs={6}>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                                <Box sx={{ flex: '1 1 48%' }}>
                                     <Card sx={{ bgcolor: 'primary.light', color: 'primary.contrastText' }}>
                                         <CardContent>
                                             <Typography variant="body2">{t('aiHistory.totalInteractions')}</Typography>
                                             <Typography variant="h4">{interactions.length}</Typography>
                                         </CardContent>
                                     </Card>
-                                </GridItem>
+                                </Box>
 
-                                <GridItem item xs={6}>
+                                <Box sx={{ flex: '1 1 48%' }}>
                                     <Card sx={{ bgcolor: 'secondary.light', color: 'secondary.contrastText' }}>
                                         <CardContent>
                                             <Typography variant="body2">{t('aiHistory.totalTokens')}</Typography>
                                             <Typography variant="h4">{stats.totalTokensUsed || 0}</Typography>
                                         </CardContent>
                                     </Card>
-                                </GridItem>
+                                </Box>
 
-                                <GridItem item xs={12}>
+                                <Box sx={{ flex: '1 1 100%' }}>
                                     <Card>
                                         <CardContent>
                                             <Typography variant="body2">{t('aiHistory.totalProcessingTime')}</Typography>
@@ -251,12 +250,12 @@ const AiInteractionHistory: React.FC = () => {
                                             </Typography>
                                         </CardContent>
                                     </Card>
-                                </GridItem>
-                            </GridContainer>
+                                </Box>
+                            </Box>
                         </Paper>
-                    </GridItem>
+                    </Box>
 
-                    <GridItem item xs={12} md={8}>
+                    <Box sx={{ flex: { xs: '100%', md: '1 1 65%' } }}>
                         <Paper sx={{ p: 2 }}>
                             <Tabs
                                 value={tabValue}
@@ -358,8 +357,8 @@ const AiInteractionHistory: React.FC = () => {
                                 {/* Hiển thị tương tác theo loại AI ở đây */}
                             </TabPanel>
                         </Paper>
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Box>
 
                 {/* Dialog hiển thị chi tiết tương tác */}
                 <Dialog
@@ -381,17 +380,17 @@ const AiInteractionHistory: React.FC = () => {
                     </DialogTitle>
                     <DialogContent dividers>
                         {selectedInteraction && (
-                            <Grid container spacing={3}>
-                                <Grid item xs={12}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                <Box>
                                     <Typography variant="subtitle2" gutterBottom>
                                         {t('aiHistory.timestamp')}:
                                     </Typography>
                                     <Typography variant="body1">
                                         {formatTimestamp(selectedInteraction.createdAt)}
                                     </Typography>
-                                </Grid>
+                                </Box>
 
-                                <Grid item xs={12}>
+                                <Box>
                                     <Typography variant="subtitle2" gutterBottom>
                                         {t('aiHistory.input')}:
                                     </Typography>
@@ -400,9 +399,9 @@ const AiInteractionHistory: React.FC = () => {
                                             {selectedInteraction.input}
                                         </Typography>
                                     </Paper>
-                                </Grid>
+                                </Box>
 
-                                <Grid item xs={12}>
+                                <Box>
                                     <Typography variant="subtitle2" gutterBottom>
                                         {t('aiHistory.output')}:
                                     </Typography>
@@ -411,39 +410,41 @@ const AiInteractionHistory: React.FC = () => {
                                             {selectedInteraction.output}
                                         </Typography>
                                     </Paper>
-                                </Grid>
+                                </Box>
 
-                                <Grid item xs={12} sm={4}>
-                                    <Typography variant="subtitle2" gutterBottom>
-                                        {t('aiHistory.executionTime')}:
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {selectedInteraction.executionTimeMs ?
-                                            `${(selectedInteraction.executionTimeMs / 1000).toFixed(2)}s` :
-                                            'N/A'}
-                                    </Typography>
-                                </Grid>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                                    <Box sx={{ flex: '1 1 30%', minWidth: '150px' }}>
+                                        <Typography variant="subtitle2" gutterBottom>
+                                            {t('aiHistory.executionTime')}:
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            {selectedInteraction.executionTimeMs ?
+                                                `${(selectedInteraction.executionTimeMs / 1000).toFixed(2)}s` :
+                                                'N/A'}
+                                        </Typography>
+                                    </Box>
 
-                                <Grid item xs={12} sm={4}>
-                                    <Typography variant="subtitle2" gutterBottom>
-                                        {t('aiHistory.tokensUsed')}:
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {selectedInteraction.tokensUsed || 'N/A'}
-                                    </Typography>
-                                </Grid>
+                                    <Box sx={{ flex: '1 1 30%', minWidth: '150px' }}>
+                                        <Typography variant="subtitle2" gutterBottom>
+                                            {t('aiHistory.tokensUsed')}:
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            {selectedInteraction.tokensUsed || 'N/A'}
+                                        </Typography>
+                                    </Box>
 
-                                <Grid item xs={12} sm={4}>
-                                    <Typography variant="subtitle2" gutterBottom>
-                                        {t('aiHistory.cost')}:
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {selectedInteraction.costUsd ?
-                                            `$${selectedInteraction.costUsd.toFixed(4)}` :
-                                            'N/A'}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
+                                    <Box sx={{ flex: '1 1 30%', minWidth: '150px' }}>
+                                        <Typography variant="subtitle2" gutterBottom>
+                                            {t('aiHistory.cost')}:
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            {selectedInteraction.costUsd ?
+                                                `$${selectedInteraction.costUsd.toFixed(4)}` :
+                                                'N/A'}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </Box>
                         )}
                     </DialogContent>
                     <DialogActions>

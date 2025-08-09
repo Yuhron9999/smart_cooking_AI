@@ -7,6 +7,8 @@ yarn-error.log*
 # Environment variables - QUAN TRỌNG: Không push API keys
 .env
 .env.local
+.env.local.backup
+.env.local.template
 .env.development.local
 .env.test.local
 .env.production.local

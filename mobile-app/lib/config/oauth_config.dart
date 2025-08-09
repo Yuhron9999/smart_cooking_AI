@@ -27,4 +27,5 @@ class OAuthConfig {
   static const String googleAuthEndpoint = '/auth/google';
   static const String facebookAuthEndpoint = '/auth/facebook';
   static const String refreshTokenEndpoint = '/auth/refresh';
+  static const String backendUserUrl = 'https://api.smartcooking.com/auth/user';
 }

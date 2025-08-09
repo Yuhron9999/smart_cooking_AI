@@ -3,7 +3,7 @@ import { SessionProvider } from 'next-auth/react'
 import { Session } from 'next-auth'
 import '../styles/globals.css'
 import Head from 'next/head'
-import AuthWrapper from '../components/AuthWrapper'
+import AuthWrapper from '../src/components/AuthWrapper'
 
 interface CustomAppProps extends AppProps {
     pageProps: {
@@ -25,11 +25,11 @@ export default function App({
                 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
                 <title>Smart Cooking AI - Nấu ăn thông minh với AI</title>
             </Head>
-            <AuthWrapper>
-                <SessionProvider session={session}>
+            <SessionProvider session={session}>
+                <AuthWrapper>
                     <Component {...pageProps} />
-                </SessionProvider>
-            </AuthWrapper>
+                </AuthWrapper>
+            </SessionProvider>
         </>
     )
 }

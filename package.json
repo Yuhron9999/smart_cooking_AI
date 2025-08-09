@@ -31,5 +31,8 @@
     "workspaces": [
         "backend",
         "frontend-nextjs"
-    ]
+    ],
+    "dependencies": {
+        "next": "^15.4.6"
+    }
 }

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import EnhancedLayout from '../components/layout/EnhancedLayout';
+import EnhancedLayout from '../src/components/layout/EnhancedLayout';
 import {
     ChefHat,
     Send,

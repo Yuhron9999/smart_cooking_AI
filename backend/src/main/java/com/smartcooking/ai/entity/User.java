@@ -1,13 +1,12 @@
 package com.smartcooking.ai.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -86,6 +85,11 @@ public class User {
     @Builder.Default
     private Boolean isActive = true;
 
+    // Getter for isActive
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
     @Column(name = "email_verified")
     @Builder.Default
     private Boolean emailVerified = false;
@@ -160,11 +164,13 @@ public class User {
     // Helper methods
     public void addFavoriteRecipe(Recipe recipe) {
         this.favoriteRecipes.add(recipe);
-        recipe.getFavoriteByUsers().add(this);
+        // Remove this line as Recipe doesn't have getFavoriteByUsers method
+        // recipe.getFavoriteByUsers().add(this);
     }
 
     public void removeFavoriteRecipe(Recipe recipe) {
         this.favoriteRecipes.remove(recipe);
-        recipe.getFavoriteByUsers().remove(this);
+        // Remove this line as Recipe doesn't have getFavoriteByUsers method
+        // recipe.getFavoriteByUsers().remove(this);
     }
 }

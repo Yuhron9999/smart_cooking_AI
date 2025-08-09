@@ -70,8 +70,8 @@ class AppRouter {
         path: '/edit-recipe/:id',
         name: 'edit-recipe',
         builder: (context, state) {
-          final recipeId = state.pathParameters['id'] ?? '';
-          return TempCreateRecipeScreen(recipeId: recipeId);
+          // For now, just use the create screen since edit functionality isn't implemented yet
+          return const TempCreateRecipeScreen();
         },
       ),
       GoRoute(

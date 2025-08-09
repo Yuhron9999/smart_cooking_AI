@@ -19,7 +19,8 @@ import {
     Globe,
     Shield
 } from 'lucide-react';
-import { SafeStats } from '../components/ClientOnly';
+import { SafeStats } from '../src/components/ClientOnly';
+import GoogleOAuthButton from '../src/components/common/GoogleOAuthButtonNew';
 
 // Utility function để format số một cách consistent (tránh hydration mismatch)
 const formatNumber = (num: number): string => {
@@ -154,7 +155,7 @@ const HomePage: NextPage = () => {
                             <Link href="/learning" className="nav-link">Học tập</Link>
                         </div>
                         <div className="flex items-center space-x-4">
-                            <button className="btn-outline">Đăng nhập</button>
+                            <GoogleOAuthButton />
                             <button className="btn-primary">Bắt đầu</button>
                         </div>
                     </div>

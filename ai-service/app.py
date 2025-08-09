@@ -9,7 +9,7 @@ import base64
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from io import BytesIO
-from PIL import Image
+from PIL import Image # pyright: ignore[reportUnusedImport]
 
 from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -41,7 +41,7 @@ GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID", "your_google_cse_id_here")  # Google 
 # Initialize services - Ưu tiên Gemini
 if GEMINI_AVAILABLE and GEMINI_API_KEY:
     try:
-        genai.configure(api_key=GEMINI_API_KEY)
+        genai.configure(api_key=GEMINI_API_KEY) # pyright: ignore[reportOptionalMemberAccess]
         print("✅ Google Gemini API initialized successfully")
     except Exception as e:
         print(f"❌ Gemini configuration failed: {e}")
@@ -49,7 +49,7 @@ if GEMINI_AVAILABLE and GEMINI_API_KEY:
 
 if OPENAI_AVAILABLE and OPENAI_API_KEY:
     try:
-        openai.api_key = OPENAI_API_KEY
+        openai.api_key = OPENAI_API_KEY # pyright: ignore[reportOptionalMemberAccess]
         print("✅ OpenAI API initialized successfully")
     except Exception as e:
         print(f"❌ OpenAI configuration failed: {e}")

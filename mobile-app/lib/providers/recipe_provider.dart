@@ -39,18 +39,18 @@ class RecipeProvider with ChangeNotifier {
   List<Recipe> _myRecipes = [];
   List<Recipe> _filteredRecipes = [];
   Recipe? _selectedRecipe;
-  
+
   bool _isLoading = false;
   bool _isLoadingMore = false;
   String? _error;
-  
+
   // Filters and search
   RecipeFilter _currentFilter = RecipeFilter.all;
   String _searchQuery = '';
   RecipeCategory? _selectedCategory;
   RecipeDifficulty? _selectedDifficulty;
   String? _selectedCuisine;
-  
+
   // Pagination
   int _currentPage = 1;
   bool _hasMoreRecipes = true;
@@ -64,17 +64,17 @@ class RecipeProvider with ChangeNotifier {
   List<Recipe> get favoriteRecipes => _favoriteRecipes;
   List<Recipe> get myRecipes => _myRecipes;
   Recipe? get selectedRecipe => _selectedRecipe;
-  
+
   bool get isLoading => _isLoading;
   bool get isLoadingMore => _isLoadingMore;
   String? get error => _error;
-  
+
   RecipeFilter get currentFilter => _currentFilter;
   String get searchQuery => _searchQuery;
   RecipeCategory? get selectedCategory => _selectedCategory;
   RecipeDifficulty? get selectedDifficulty => _selectedDifficulty;
   String? get selectedCuisine => _selectedCuisine;
-  
+
   bool get hasMoreRecipes => _hasMoreRecipes;
 
   /// Initialize recipes
@@ -107,9 +107,8 @@ class RecipeProvider with ChangeNotifier {
 
       if (response['success'] == true) {
         final List<dynamic> recipesData = response['data']['recipes'];
-        final List<Recipe> newRecipes = recipesData
-            .map((json) => Recipe.fromJson(json))
-            .toList();
+        final List<Recipe> newRecipes =
+            recipesData.map((json) => Recipe.fromJson(json)).toList();
 
         if (refresh) {
           _recipes = newRecipes;
@@ -119,7 +118,7 @@ class RecipeProvider with ChangeNotifier {
 
         _hasMoreRecipes = newRecipes.length == _pageSize;
         _applyFilters();
-        
+
         _setLoading(false);
       } else {
         _setError(response['message'] ?? 'Failed to load recipes');
@@ -140,7 +139,7 @@ class RecipeProvider with ChangeNotifier {
       notifyListeners();
 
       _currentPage++;
-      
+
       final response = await _apiService.getRecipes(
         page: _currentPage,
         limit: _pageSize,
@@ -153,15 +152,14 @@ class RecipeProvider with ChangeNotifier {
 
       if (response['success'] == true) {
         final List<dynamic> recipesData = response['data']['recipes'];
-        final List<Recipe> newRecipes = recipesData
-            .map((json) => Recipe.fromJson(json))
-            .toList();
+        final List<Recipe> newRecipes =
+            recipesData.map((json) => Recipe.fromJson(json)).toList();
 
         _recipes.addAll(newRecipes);
         _hasMoreRecipes = newRecipes.length == _pageSize;
         _applyFilters();
       }
-      
+
       _isLoadingMore = false;
       notifyListeners();
     } catch (e) {
@@ -177,7 +175,7 @@ class RecipeProvider with ChangeNotifier {
       _clearError();
 
       final response = await _apiService.getRecipeById(recipeId);
-      
+
       if (response['success'] == true) {
         final recipe = Recipe.fromJson(response['data']);
         _selectedRecipe = recipe;
@@ -200,13 +198,13 @@ class RecipeProvider with ChangeNotifier {
       _clearError();
 
       final response = await _apiService.createRecipe(recipe.toJson());
-      
+
       if (response['success'] == true) {
         final newRecipe = Recipe.fromJson(response['data']);
         _recipes.insert(0, newRecipe);
         _myRecipes.insert(0, newRecipe);
         _applyFilters();
-        
+
         _setLoading(false);
         return true;
       } else {
@@ -227,20 +225,21 @@ class RecipeProvider with ChangeNotifier {
       _setLoading(true);
       _clearError();
 
-      final response = await _apiService.updateRecipe(recipe.id, recipe.toJson());
-      
+      final response =
+          await _apiService.updateRecipe(recipe.id, recipe.toJson());
+
       if (response['success'] == true) {
         final updatedRecipe = Recipe.fromJson(response['data']);
-        
+
         // Update in all lists
         _updateRecipeInList(_recipes, updatedRecipe);
         _updateRecipeInList(_myRecipes, updatedRecipe);
         _updateRecipeInList(_favoriteRecipes, updatedRecipe);
-        
+
         if (_selectedRecipe?.id == updatedRecipe.id) {
           _selectedRecipe = updatedRecipe;
         }
-        
+
         _applyFilters();
         _setLoading(false);
         return true;
@@ -263,17 +262,17 @@ class RecipeProvider with ChangeNotifier {
       _clearError();
 
       final response = await _apiService.deleteRecipe(recipeId);
-      
+
       if (response['success'] == true) {
         // Remove from all lists
         _recipes.removeWhere((recipe) => recipe.id == recipeId);
         _myRecipes.removeWhere((recipe) => recipe.id == recipeId);
         _favoriteRecipes.removeWhere((recipe) => recipe.id == recipeId);
-        
+
         if (_selectedRecipe?.id == recipeId) {
           _selectedRecipe = null;
         }
-        
+
         _applyFilters();
         _setLoading(false);
         return true;
@@ -293,21 +292,22 @@ class RecipeProvider with ChangeNotifier {
   Future<bool> toggleFavorite(String recipeId) async {
     try {
       final response = await _apiService.toggleRecipeFavorite(recipeId);
-      
+
       if (response['success'] == true) {
         final isFavorited = response['data']['isFavorited'] as bool;
-        
+
         // Update recipe in main list
         final recipeIndex = _recipes.indexWhere((r) => r.id == recipeId);
         if (recipeIndex != -1) {
-          _recipes[recipeIndex] = _recipes[recipeIndex].copyWith(isFavorited: isFavorited);
+          _recipes[recipeIndex] =
+              _recipes[recipeIndex].copyWith(isFavorite: isFavorited);
         }
-        
+
         // Update selected recipe
         if (_selectedRecipe?.id == recipeId) {
-          _selectedRecipe = _selectedRecipe!.copyWith(isFavorited: isFavorited);
+          _selectedRecipe = _selectedRecipe!.copyWith(isFavorite: isFavorited);
         }
-        
+
         // Update favorites list
         if (isFavorited) {
           final recipe = _recipes.firstWhere((r) => r.id == recipeId);
@@ -317,7 +317,7 @@ class RecipeProvider with ChangeNotifier {
         } else {
           _favoriteRecipes.removeWhere((recipe) => recipe.id == recipeId);
         }
-        
+
         _applyFilters();
         return true;
       }
@@ -332,13 +332,12 @@ class RecipeProvider with ChangeNotifier {
   Future<void> loadFavoriteRecipes() async {
     try {
       final response = await _apiService.getFavoriteRecipes();
-      
+
       if (response['success'] == true) {
         final List<dynamic> recipesData = response['data'];
-        _favoriteRecipes = recipesData
-            .map((json) => Recipe.fromJson(json))
-            .toList();
-        
+        _favoriteRecipes =
+            recipesData.map((json) => Recipe.fromJson(json)).toList();
+
         if (_currentFilter == RecipeFilter.favorites) {
           _applyFilters();
         }
@@ -352,13 +351,11 @@ class RecipeProvider with ChangeNotifier {
   Future<void> loadMyRecipes() async {
     try {
       final response = await _apiService.getMyRecipes();
-      
+
       if (response['success'] == true) {
         final List<dynamic> recipesData = response['data'];
-        _myRecipes = recipesData
-            .map((json) => Recipe.fromJson(json))
-            .toList();
-        
+        _myRecipes = recipesData.map((json) => Recipe.fromJson(json)).toList();
+
         if (_currentFilter == RecipeFilter.myRecipes) {
           _applyFilters();
         }
@@ -441,7 +438,7 @@ class RecipeProvider with ChangeNotifier {
           ..sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
         break;
     }
-    
+
     notifyListeners();
   }
 

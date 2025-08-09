@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import EnhancedLayout from '../components/layout/EnhancedLayout';
+import { EnhancedLayout } from '../src/components';
+import { aiAPI } from '../lib/api';
 import {
     Mic,
     MicOff,
@@ -18,7 +19,6 @@ import {
     Radio,
     Loader2
 } from 'lucide-react';
-import { aiAPI } from '../lib/api';
 
 // Add SpeechRecognition type for TypeScript
 type SpeechRecognition = InstanceType<typeof window.webkitSpeechRecognition>;

@@ -2,15 +2,15 @@
 // Place this file in lib/services/ directory
 
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import '../config/oauth_config.dart';
+import '../models/user.dart';
 
 class AuthService {
-  final FlutterAppAuth _appAuth = FlutterAppAuth();
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+  static const FlutterAppAuth _appAuth = FlutterAppAuth();
+  static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
   // Google Sign In
   Future<bool> signInWithGoogle() async {
@@ -135,6 +135,140 @@ class AuthService {
 
     final token = await getAccessToken();
     return _AuthenticatedClient(client, token!);
+  }
+
+  // Additional methods for compatibility
+
+  Future<bool> isLoggedIn() async {
+    try {
+      final token = await getAccessToken();
+      return token != null && token.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<User?> getCurrentUser() async {
+    try {
+      final token = await getAccessToken();
+      if (token == null) return null;
+
+      final response = await http.get(
+        Uri.parse('${OAuthConfig.backendUserUrl}/me'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return User.fromJson(data);
+      }
+
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<User?> signInWithEmailPassword(String email, String password) async {
+    // Mock implementation - replace with actual backend call
+    try {
+      // Simulate API call
+      await Future.delayed(const Duration(seconds: 1));
+
+      if (email.isNotEmpty && password.isNotEmpty) {
+        final user = User(
+          id: 'user_${DateTime.now().millisecondsSinceEpoch}',
+          email: email,
+          name: email.split('@').first,
+          isEmailVerified: true,
+          createdAt: DateTime.now(),
+          lastSignInAt: DateTime.now(),
+          additionalData: {'provider': 'email'},
+        );
+
+        // Store token
+        await _secureStorage.write(
+            key: 'access_token', value: 'mock_token_${user.id}');
+
+        return user;
+      }
+
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<User?> signUpWithEmailPassword(String email, String password,
+      {String? name}) async {
+    // Mock implementation - replace with actual backend call
+    try {
+      // Simulate API call
+      await Future.delayed(const Duration(seconds: 1));
+
+      if (email.isNotEmpty && password.isNotEmpty) {
+        final user = User(
+          id: 'user_${DateTime.now().millisecondsSinceEpoch}',
+          email: email,
+          name: name ?? email.split('@').first,
+          isEmailVerified: false,
+          createdAt: DateTime.now(),
+          lastSignInAt: DateTime.now(),
+          additionalData: {'provider': 'email'},
+        );
+
+        // Store token
+        await _secureStorage.write(
+            key: 'access_token', value: 'mock_token_${user.id}');
+
+        return user;
+      }
+
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<User?> updateProfile({String? name, String? photoUrl}) async {
+    // Mock implementation - replace with actual backend call
+    try {
+      final currentUser = await getCurrentUser();
+      if (currentUser == null) return null;
+
+      final updatedUser = currentUser.copyWith(
+        name: name ?? currentUser.name,
+        photoUrl: photoUrl ?? currentUser.photoUrl,
+      );
+
+      return updatedUser;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<bool> changePassword(
+      String currentPassword, String newPassword) async {
+    // Mock implementation - replace with actual backend call
+    try {
+      await Future.delayed(const Duration(seconds: 1));
+      return currentPassword.isNotEmpty && newPassword.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> resetPassword(String email) async {
+    // Mock implementation - replace with actual backend call
+    try {
+      await Future.delayed(const Duration(seconds: 1));
+      return email.isNotEmpty && email.contains('@');
+    } catch (e) {
+      return false;
+    }
   }
 }
 

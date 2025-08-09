@@ -3,13 +3,7 @@ import 'package:flutter/foundation.dart';
 // import 'package:flutter_tts/flutter_tts.dart';
 import '../services/api_service.dart';
 
-enum VoiceState {
-  inactive,
-  listening,
-  processing,
-  speaking,
-  error,
-}
+enum VoiceState { inactive, listening, processing, speaking, error }
 
 enum VoiceCommand {
   createRecipe,
@@ -152,5 +146,4 @@ class VoiceProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
 }
